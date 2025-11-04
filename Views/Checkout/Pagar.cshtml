@@ -1,0 +1,44 @@
+
+@{
+  ViewBag.Title="Pago";
+  Layout="~/Views/Shared/_Layout.cshtml";
+}
+<h1 class="h4 mb-3">Realizar pago</h1>
+<div class="row">
+  <div class="col-md-6">
+    @using (Html.BeginForm("Pagar","Checkout", FormMethod.Post)) {
+      @Html.AntiForgeryToken()
+      <div class="mb-3">
+        <label class="form-label">Nombre en la tarjeta</label>
+        <input name="nombre" class="form-control" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Número de tarjeta</label>
+        <input name="tarjeta" class="form-control" maxlength="19" placeholder="4111 1111 1111 1111" required />
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Vencimiento</label>
+          <input name="vencimiento" class="form-control" placeholder="MM/AA" required />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">CVV</label>
+          <input name="cvv" class="form-control" maxlength="4" required />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Total</label>
+        <input name="total" id="totalInput" class="form-control" readonly value="0.00" />
+        <small class="text-muted">El total se llena desde el carrito.</small>
+      </div>
+      <button class="btn btn-dark">Pagar ahora</button>
+      <a class="btn btn-outline-secondary ms-2" href="@Url.Action("Index","Productos")">Seguir comprando</a>
+    }
+  </div>
+</div>
+<script>
+(function(){
+  var t = sessionStorage.getItem('fitstyle_total');
+  if(t){ var input = document.getElementById('totalInput'); if(input){ input.value = t; } }
+})();
+</script>

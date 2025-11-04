@@ -1,0 +1,18 @@
+
+@model Prototipado.Models.ProductoVM
+<div class="col-12 col-sm-6 col-lg-4">
+  <div class="card h-100">
+    <div class="ratio ratio-4x3 bg-light">
+      <img class="card-img-top" src="@Model.Imagen" alt="@Model.Nombre" />
+    </div>
+    <div class="card-body">
+      <div class="text-muted small">@Model.Marca</div>
+      <div class="fw-bold text-truncate">@Model.Nombre</div>
+      <div class="fw-bold">$@Model.Precio</div>
+      <div class="mt-2 d-flex gap-2">
+        <a href="@Url.Action("Details","Productos", new { id = Model.Id })" class="btn btn-secondary btn-sm">Ver</a>
+        <button class="btn btn-dark btn-sm" type="button" data-addcart='{"Nombre":"@Model.Nombre","Precio":@Model.Precio,"Imagen":"@Model.Imagen"}'>Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>

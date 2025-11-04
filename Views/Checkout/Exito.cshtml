@@ -1,0 +1,12 @@
+
+@{
+  ViewBag.Title="Pago exitoso";
+  Layout="~/Views/Shared/_Layout.cshtml";
+  var total = TempData["Total"];
+  var nombre = TempData["Nombre"];
+}
+<div class="alert alert-success">
+  <h4 class="alert-heading">¡Pago realizado con éxito!</h4>
+  <p>Gracias @nombre por tu compra. Total pagado: <strong>$@total</strong>.</p>
+</div>
+<a class="btn btn-dark" href="@Url.Action("Index","Productos")">Volver al catálogo</a>

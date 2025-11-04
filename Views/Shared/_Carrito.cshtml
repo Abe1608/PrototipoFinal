@@ -1,0 +1,14 @@
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="carritoOffcanvas" aria-labelledby="carritoLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="carritoLabel">Tu carrito</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column">
+    <div id="carritoItems" class="vstack gap-3 small"></div>
+    <div class="mt-auto border-top pt-3 d-flex justify-content-between">
+      <strong>Total</strong><span id="carritoTotal">$0.00</span>
+    </div>
+    <a id="btnPagar" class="btn btn-dark w-100 mt-2 disabled" href="@Url.Action("Pagar","Checkout")">Proceder a pagar</a>
+  </div>
+</div>

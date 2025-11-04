@@ -1,0 +1,12 @@
+
+@model IEnumerable<Prototipado.Models.ProductoVM>
+@{
+  ViewBag.Title = "Catálogo";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1 class="h3 mb-3">Catálogo</h1>
+<div class="row g-3">
+@foreach (var item in Model) {
+  @Html.Partial("~/Views/Shared/_ProductoCard.cshtml", item)
+}
+</div>

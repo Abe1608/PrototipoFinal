@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "Inicio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="p-4 p-md-5 bg-white rounded-4 shadow-sm">
+    <h1 class="display-6 fw-bold">Ropa deportiva que <span class="text-decoration-underline">rinde</span></h1>
+    <p class="lead text-muted">Tecnología DryFit, diseños ligeros y precios para estudiantes.</p>
+    <div class="d-flex gap-2">
+        <a class="btn btn-dark" href="@Url.Action("Index","Productos")">Ver catálogo</a>
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <a class="btn btn-outline-dark" href="@Url.Action("Login","Account", new { returnUrl = Url.Action("Index","Productos") })">Iniciar sesión</a>
+        }
+    </div>
+</div>
