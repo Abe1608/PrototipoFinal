@@ -1,18 +1,17 @@
 
+using PrototipoFinal.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
-using Prototipado.Models;
+
 
 namespace Prototipado.Controllers
 {
     public class AccountController : Controller
     {
-        private static readonly List<UsuarioVM> _usuarios = new List<UsuarioVM> {
-            new UsuarioVM { Nombre = "Admin", Email = "admin@fitstyle.com", Password = "123456" }
-        };
+        private static readonly FitStyleDBEntities db = new FitStyleDBEntities();
 
         [AllowAnonymous]
         [HttpGet]
@@ -21,10 +20,10 @@ namespace Prototipado.Controllers
         [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
         public ActionResult Login(string email, string password, string returnUrl)
         {
-            var user = _usuarios.FirstOrDefault(u => email.Equals(u.Email, StringComparison.OrdinalIgnoreCase) && u.Password == password);
+            var user = db.Usuarios.FirstOrDefault(u => email.Equals(u.email, StringComparison.OrdinalIgnoreCase) && u.password_hash == password);
             if (user != null)
             {
-                FormsAuthentication.SetAuthCookie(user.Email, false);
+                FormsAuthentication.SetAuthCookie(user.email, false);
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)) return Redirect(returnUrl);
                 return RedirectToAction("Index", "Productos");
             }
@@ -34,33 +33,39 @@ namespace Prototipado.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult Register(string returnUrl)
+        public ActionResult Register()
         {
-            ViewBag.ReturnUrl = returnUrl;
-            return View(new RegisterVM());
+            return View(new Usuarios());
         }
 
-        [AllowAnonymous]
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterVM model, string returnUrl)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Register(Usuarios model, string Password, string ConfirmPassword)
         {
-            if (!ModelState.IsValid) return View(model);
-
-            if (_usuarios.Any(u => u.Email.Equals(model.Email, StringComparison.OrdinalIgnoreCase)))
+            if (Password != ConfirmPassword)
             {
-                ModelState.AddModelError("Email", "Este correo ya está registrado.");
+                ModelState.AddModelError("", "Las contraseñas no coinciden.");
+            }
+
+            if (!ModelState.IsValid)
+            {
                 return View(model);
             }
 
-            var nuevo = new UsuarioVM { Nombre = model.Nombre, Email = model.Email, Password = model.Password };
-            _usuarios.Add(nuevo);
-            FormsAuthentication.SetAuthCookie(nuevo.Email, false);
+         
+            model.password_hash = Password; 
+            model.es_admin = false;
+            model.fecha_registro = DateTime.UtcNow;
 
-            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                return Redirect(returnUrl);
+            using (var db = new FitStyleDBEntities())
+            {
+                db.Usuarios.Add(model);
+                db.SaveChanges();
+            }
 
-            return RedirectToAction("Index", "Productos");
+            return RedirectToAction("Login", "Account");
         }
+
 
         [Authorize]
         public ActionResult Logout()

@@ -1,45 +1,47 @@
+@model PrototipoFinal.Models.Usuarios
 
-@model Prototipado.Models.RegisterVM
 @{
-  ViewBag.Title="Registrarse";
-  Layout="~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Registrarse";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="row justify-content-center">
-  <div class="col-md-7 col-lg-6">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h1 class="h4 fw-bold mb-3">Crear cuenta</h1>
-        @using (Html.BeginForm("Register","Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post)) {
-          @Html.AntiForgeryToken()
-          <div class="mb-3">
-            @Html.LabelFor(m => m.Nombre, new { @class="form-label" })
-            @Html.TextBoxFor(m => m.Nombre, new { @class="form-control", placeholder="Tu nombre completo" })
-            @Html.ValidationMessageFor(m => m.Nombre, "", new { @class="text-danger small" })
-          </div>
-          <div class="mb-3">
-            @Html.LabelFor(m => m.Email, new { @class="form-label" })
-            @Html.TextBoxFor(m => m.Email, new { @class="form-control", type="email", placeholder="tucorreo@ejemplo.com" })
-            @Html.ValidationMessageFor(m => m.Email, "", new { @class="text-danger small" })
-          </div>
-          <div class="mb-3">
-            @Html.LabelFor(m => m.Password, new { @class="form-label" })
-            @Html.PasswordFor(m => m.Password, new { @class="form-control", placeholder="Mínimo 6 caracteres" })
-            @Html.ValidationMessageFor(m => m.Password, "", new { @class="text-danger small" })
-          </div>
-          <div class="mb-3">
-            @Html.LabelFor(m => m.ConfirmPassword, new { @class="form-label" })
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class="form-control", placeholder="Repite la contraseña" })
-            @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class="text-danger small" })
-          </div>
+    <div class="col-md-7 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="h4 fw-bold mb-3">Crear cuenta</h1>
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
 
-          @Html.ValidationSummary(true, "", new { @class="alert alert-danger py-2" })
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.nombre_completo, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.nombre_completo, new { @class = "form-control", placeholder = "Tu nombre completo" })
+                        @Html.ValidationMessageFor(m => m.nombre_completo, "", new { @class = "text-danger small" })
+                    </div>
 
-          <button class="btn btn-dark w-100" type="submit">Crear cuenta</button>
-        }
-        <div class="text-center mt-3">
-          ¿Ya tienes cuenta? <a href="@Url.Action("Login","Account", new { returnUrl = ViewBag.ReturnUrl })">Inicia sesión</a>
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.email, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.email, new { @class = "form-control", type = "email", placeholder = "tucorreo@ejemplo.com" })
+                        @Html.ValidationMessageFor(m => m.email, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.Label("Password", new { @class = "form-label" })
+                        @Html.Password("Password", null, new { @class = "form-control", placeholder = "Mínimo 6 caracteres" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.Label("ConfirmPassword", "Confirmar contraseña", new { @class = "form-label" })
+                        @Html.Password("ConfirmPassword", null, new { @class = "form-control", placeholder = "Repite la contraseña" })
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100">Crear cuenta</button>
+                }
+
+                <div class="text-center mt-3">
+                    ¿Ya tienes cuenta? <a href="@Url.Action("Login","Account", new { returnUrl = ViewBag.ReturnUrl })">Inicia sesión</a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>

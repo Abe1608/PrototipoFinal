@@ -1,18 +1,45 @@
+@model PrototipoFinal.ViewsModels.DestacadosViewModel
 
-@model Prototipado.Models.ProductoVM
-<div class="col-12 col-sm-6 col-lg-4">
-  <div class="card h-100">
-    <div class="ratio ratio-4x3 bg-light">
-      <img class="card-img-top" src="@Model.Imagen" alt="@Model.Nombre" />
+<div class="col-12 col-sm-6 col-lg-3">
+    <div class="card h-100 shadow-sm border-0">
+        <div class="ratio ratio-4x3 bg-light">
+            <img src="@Model.Imagen"
+                 class="card-img-top object-fit-cover"
+                 alt="@Model.Nombre" />
+        </div>
+
+        <div class="card-body d-flex flex-column">
+            <small class="text-muted">
+                @Model.CategoriaNombre
+            </small>
+
+            <h5 class="card-title fw-bold text-truncate">
+                @Model.Nombre
+            </h5>
+
+            @if (!string.IsNullOrEmpty(Model.DescripcionCorta))
+            {
+                <p class="card-text text-muted small flex-grow-1">
+                    @Model.DescripcionCorta
+                </p>
+            }
+
+            <div class="fw-bold mt-1">
+                $@Model.Precio.ToString("0.00")
+            </div>
+
+            <div class="mt-3 d-flex gap-2">
+                <a href="@Url.Action("Details", "Productos", new { id = Model.IdProducto })"
+                   class="btn btn-secondary btn-sm flex-fill">
+                    Ver
+                </a>
+
+                <button class="btn btn-dark btn-sm flex-fill"
+                        type="button"
+                        data-addcart='{"Id": @Model.IdProducto, "Nombre":"@Model.Nombre", "Precio": @Model.Precio, "Imagen":"@Model.Imagen"}'>
+                    Agregar
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-      <div class="text-muted small">@Model.Marca</div>
-      <div class="fw-bold text-truncate">@Model.Nombre</div>
-      <div class="fw-bold">$@Model.Precio</div>
-      <div class="mt-2 d-flex gap-2">
-        <a href="@Url.Action("Details","Productos", new { id = Model.Id })" class="btn btn-secondary btn-sm">Ver</a>
-        <button class="btn btn-dark btn-sm" type="button" data-addcart='{"Nombre":"@Model.Nombre","Precio":@Model.Precio,"Imagen":"@Model.Imagen"}'>Agregar</button>
-      </div>
-    </div>
-  </div>
 </div>

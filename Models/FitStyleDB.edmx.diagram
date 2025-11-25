@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="e88a9ad008d64b658f781121cd744861" Name="Diagram1">
+        <EntityTypeShape EntityType="FitStyleDBModel.Carrito_Detalle" Width="1.5" PointX="7.5" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="FitStyleDBModel.Carritos" Width="1.5" PointX="5.25" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FitStyleDBModel.Categorias" Width="1.5" PointX="0.75" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="FitStyleDBModel.Colores_Catalogo" Width="1.5" PointX="3" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="FitStyleDBModel.Facturas" Width="1.5" PointX="7.5" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="FitStyleDBModel.Inventario_Detalle" Width="1.5" PointX="5.25" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FitStyleDBModel.Pedido_Detalle" Width="1.5" PointX="7.5" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FitStyleDBModel.Pedidos" Width="1.5" PointX="5.25" PointY="14.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FitStyleDBModel.Productos" Width="1.5" PointX="3" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="FitStyleDBModel.Tallas_Catalogo" Width="1.5" PointX="3" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="FitStyleDBModel.Usuarios" Width="1.5" PointX="3" PointY="14.25" IsExpanded="true" />
+        <AssociationConnector Association="FitStyleDBModel.FK_CarritoDet_Carritos" ManuallyRouted="false" />
+        <AssociationConnector Association="FitStyleDBModel.FK_CarritoDet_Inventario" ManuallyRouted="false" />
+        <AssociationConnector Association="FitStyleDBModel.FK_Carritos_Usuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="FitStyleDBModel.FK_Productos_Categorias" ManuallyRouted="false" />
+        <AssociationConnector Association="FitStyleDBModel.FK_Inv_Color" ManuallyRouted="false" />
+        <AssociationConnector Association="FitStyleDBModel.FK_Facturas_Pedidos" ManuallyRouted="false" />
+        <AssociationConnector Association="FitStyleDBModel.FK_Facturas_Usuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="FitStyleDBModel.FK_Inv_Prod" ManuallyRouted="false" />
+        <AssociationConnector Association="FitStyleDBModel.FK_Inv_Talla" ManuallyRouted="false" />
+        <AssociationConnector Association="FitStyleDBModel.FK_PedDet_Inventario" ManuallyRouted="false" />
+        <AssociationConnector Association="FitStyleDBModel.FK_PedDet_Pedidos" ManuallyRouted="false" />
+        <AssociationConnector Association="FitStyleDBModel.FK_Pedidos_Usuarios" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
