@@ -23,14 +23,20 @@ namespace PrototipoFinal.Models
             this.Facturas = new HashSet<Facturas>();
             this.Pedidos = new HashSet<Pedidos>();
         }
-    
+
         public int id_usuario { get; set; }
-        [StringLength(50, ErrorMessage = "Has superado el maximo de caracteres!")]
+        [StringLength(80, ErrorMessage ="No debe sobrepasar de los 80 caracteres")]
+        [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
+        [RegularExpression("^[a-zA-Z][a-zA-Z0-9]{3,19}$",
+    ErrorMessage = "El nombre de usuario debe iniciar con una letra y solo puede contener letras y números (4–20 caracteres).")]
         public string nombre_usuario { get; set; }
-        [EmailAddress(ErrorMessage = "Correo no valido")]
+        [DataType(DataType.EmailAddress)]
         public string email { get; set; }
+        [DataType(DataType.Password)]
+        [StringLength(15, MinimumLength = 6)]
         [PasswordPropertyText(true)]
         public string password_hash { get; set; }
+        [StringLength(80, ErrorMessage = "No debe sobrepasar de los 80 caracteres")]
         public string nombre_completo { get; set; }
         public bool es_admin { get; set; }
         public System.DateTime fecha_registro { get; set; }

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="FitStyleDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="FitStyleDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Carrito_Detalle">
           <Key>
             <PropertyRef Name="id_carrito_detalle" />
@@ -97,6 +97,7 @@
           <Property Name="activo" Type="bit" Nullable="false" />
           <Property Name="fecha_creacion" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="destacado" Type="bit" Nullable="false" />
+          <Property Name="seccion" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="Tallas_Catalogo">
           <Key>
@@ -322,8 +323,7 @@
             <End Role="Productos" EntitySet="Productos" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="FitStyleDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -439,6 +439,7 @@
           <Property Name="destacado" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Categorias" Relationship="Self.FK_Productos_Categorias" FromRole="Productos" ToRole="Categorias" />
           <NavigationProperty Name="Inventario_Detalle" Relationship="Self.FK_Inv_Prod" FromRole="Productos" ToRole="Inventario_Detalle" />
+          <Property Name="seccion" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Tallas_Catalogo">
           <Key>
@@ -763,6 +764,7 @@
           <EntitySetMapping Name="Productos">
             <EntityTypeMapping TypeName="FitStyleDBModel.Productos">
               <MappingFragment StoreEntitySet="Productos">
+                <ScalarProperty Name="seccion" ColumnName="seccion" />
                 <ScalarProperty Name="id_producto" ColumnName="id_producto" />
                 <ScalarProperty Name="nombre_producto" ColumnName="nombre_producto" />
                 <ScalarProperty Name="descripcion_corta" ColumnName="descripcion_corta" />

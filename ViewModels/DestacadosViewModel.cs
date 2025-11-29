@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace PrototipoFinal.ViewsModels
+namespace PrototipoFinal.ViewModels
 {
     public class DestacadosViewModel
     {

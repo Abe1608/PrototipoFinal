@@ -2,9 +2,11 @@
 using PrototipoFinal.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Web.Services.Description;
 
 
 namespace Prototipado.Controllers
@@ -38,6 +40,7 @@ namespace Prototipado.Controllers
             return View(new Usuarios());
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register(Usuarios model, string Password, string ConfirmPassword)
@@ -52,18 +55,57 @@ namespace Prototipado.Controllers
                 return View(model);
             }
 
-         
+
             model.password_hash = Password; 
             model.es_admin = false;
             model.fecha_registro = DateTime.UtcNow;
 
             using (var db = new FitStyleDBEntities())
             {
-                db.Usuarios.Add(model);
-                db.SaveChanges();
-            }
+               
+                if (db.Usuarios.Any(u => u.nombre_usuario == model.nombre_usuario))
+                {
+                    ModelState.AddModelError("nombre_usuario", "El nombre de usuario ya está en uso, elige otro.");
+                    return View(model);
+                    
+                }
+                if (db.Usuarios.Any(u => u.email == model.email))
+                {
+                    ModelState.AddModelError("email", "El correo ya está en uso, elige otro.");
+                    return View(model);
+                }
+                try
+                {
+                    db.Usuarios.Add(model);
+                    db.SaveChanges();
+                    
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    
+                    var detalles = ex.EntityValidationErrors
+                        .SelectMany(e => e.ValidationErrors)
+                        .Select(e => $"Propiedad: {e.PropertyName} - Error: {e.ErrorMessage}");
 
+                    var mensaje = string.Join(" || ", detalles);
+
+                
+                    System.Diagnostics.Debug.WriteLine("ERRORES: " + mensaje);
+
+                  
+                    foreach (var e in ex.EntityValidationErrors.SelectMany(v => v.ValidationErrors))
+                    {
+                        ModelState.AddModelError(e.PropertyName, e.ErrorMessage);
+                    }
+
+                    
+                    throw new Exception("Error de validación al guardar Usuario: " + mensaje, ex);
+                }
+
+                TempData["SuccessMessage"] = "Tu cuenta ha sido creada correctamente.";
+            }
             return RedirectToAction("Login", "Account");
+
         }
 
 

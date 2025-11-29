@@ -1,2 +1,251 @@
 body{background:#f8f9fa}.card-img-top{object-fit:cover;height:220px}
 
+.hero-carousel-wrapper {
+    max-width: 720px;
+    margin-left: auto;
+}
+
+/* Caja del carrusel tipo “tarjeta” */
+#heroCarousel {
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.28);
+    background: #101010;
+}
+
+    /* Alto fijo: aquí se ajusta la imagen */
+    #heroCarousel .carousel-inner {
+        height: 320px; /* cambia la altura del carrusel aquí */
+    }
+
+    /* Cada slide ocupa todo el alto */
+    #heroCarousel .carousel-item {
+        height: 100%;
+    }
+
+        /* IMAGEN: se ajusta exactamente al carrusel */
+        #heroCarousel .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* recorta sin deformar */
+            object-position: center;
+            display: block;
+        }
+
+    /* Caption con fondo difuminado */
+    #heroCarousel .carousel-caption {
+        bottom: 16px;
+        left: 16px;
+        right: 16px;
+        padding: 10px 14px;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(6px);
+        border-radius: 12px;
+    }
+
+        #heroCarousel .carousel-caption h5 {
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        #heroCarousel .carousel-caption p {
+            font-size: 0.85rem;
+            margin-bottom: 0;
+        }
+
+    /* Indicadores tipo “barras” minimalistas */
+    #heroCarousel .carousel-indicators {
+        bottom: 10px;
+    }
+
+        #heroCarousel .carousel-indicators [data-bs-target] {
+            width: 28px;
+            height: 3px;
+            border-radius: 999px;
+            background-color: rgba(255, 255, 255, 0.35);
+            border: none;
+            margin: 0 4px;
+        }
+
+        #heroCarousel .carousel-indicators .active {
+            background-color: #ffffff;
+        }
+
+    /* Flechas redondas y elegantes */
+    #heroCarousel .carousel-control-prev,
+    #heroCarousel .carousel-control-next {
+        width: 56px;
+    }
+
+    #heroCarousel .carousel-control-prev-icon,
+    #heroCarousel .carousel-control-next-icon {
+        background-color: rgba(0, 0, 0, 0.65);
+        border-radius: 999px;
+        padding: 14px;
+        background-size: 60% 60%;
+    }
+
+.carousel-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+    .carousel-link:hover {
+        text-decoration: none;
+    }
+
+/* ====== Botones de Ver todo ====== */
+
+.link-btn-outline {
+    display: inline-block;
+    padding: 8px 18px;
+    border: 2px solid #111;
+    border-radius: 12px;
+    color: #111;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.25s ease;
+}
+
+    .link-btn-outline:hover {
+        background: #111;
+        color: #fff;
+    }
+
+
+
+
+
+/* ====== Carrusel de Categorías ====== */
+
+.category-strip-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Contenedor que hace el scroll horizontal */
+.category-strip {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 0.5rem 0.25rem 0.75rem;
+}
+
+    /* Oculta barra de scroll (opcional) */
+    .category-strip::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .category-strip::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .category-strip::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0,0.12);
+        border-radius: 999px;
+    }
+
+/* Tarjeta de categoría */
+.category-pill {
+    flex: 0 0 auto;
+    width: 120px;
+    text-align: center;
+    text-decoration: none;
+    color: #111;
+    font-size: 0.85rem;
+}
+
+/* Imagen redondeada tipo “burbuja” */
+.category-image {
+    width: 110px;
+    height: 110px;
+    border-radius: 999px; /* círculo; pon 30px para “squircle” */
+    overflow: hidden;
+    margin: 0 auto 0.35rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    background: #f5f5f5;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+    .category-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+
+/* Texto debajo */
+.category-label {
+    display: block;
+    margin-top: 0.1rem;
+}
+
+/* Hover bonito */
+.category-pill:hover .category-image {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
+}
+
+.category-pill:hover .category-label {
+    font-weight: 600;
+}
+
+/* Botones laterales */
+.category-nav-btn {
+    border: none;
+    background: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    color: #222;
+}
+
+    .category-nav-btn:hover {
+        transform: translateY(-1px);
+        background-color: #f4f4f4;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.24);
+    }
+
+.category-nav-prev {
+    margin-right: 0.25rem;
+}
+
+.category-nav-next {
+    margin-left: 0.25rem;
+}
+
+/* En pantallas muy pequeñas, que ocupe todo el ancho */
+@media (max-width: 576px) {
+    .category-pill {
+        width: 96px;
+    }
+
+    .category-image {
+        width: 90px;
+        height: 90px;
+    }
+}
+
+.alert {
+    transition: opacity 0.5s ease-out;
+}
+
+.pulse-badge {
+    transform: scale(1.2);
+    transition: transform 0.2s ease;
+}

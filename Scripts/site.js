@@ -1,41 +1,166 @@
-﻿
-document.addEventListener('DOMContentLoaded', function () {
-    const itemsEl = document.getElementById('carritoItems');
-    const totalEl = document.getElementById('carritoTotal');
-    const pagarLink = document.getElementById('btnPagar');
-    const offEl = document.getElementById('carritoOffcanvas');
-    if (!itemsEl || !totalEl) return;
-    let items = [];
-    function render() {
-        itemsEl.innerHTML = ''; let total = 0;
-        items.forEach((it, ix) => {
-            total += it.precio * it.cantidad;
-            const d = document.createElement('div'); d.className = 'd-flex align-items-center gap-2';
-            d.innerHTML = `<img src="${it.imagen}" style="width:56px;height:56px;object-fit:cover" class="rounded"/>
-      <div class="flex-grow-1"><div class="fw-semibold text-truncate">${it.nombre}</</div><div class="text-muted">$${it.precio.toFixed(2)} c/u</div></div>
-      <div class="d-flex align-items-center gap-2">
-        <input type="number" min="1" value="${it.cantidad}" class="form-control form-control-sm" style="width:80px" data-idx="${ix}"/>
-        <button class="btn btn-outline-secondary btn-sm" data-remove="${ix}">Quitar</button>
-      </div>`; itemsEl.appendChild(d);
+﻿//Funcion para el scroll horizontal de las categorias en la pagina principal
+document.addEventListener("DOMContentLoaded", function () {
+    const navButtons = document.querySelectorAll(".category-nav-btn");
+
+    navButtons.forEach(btn => {
+        btn.addEventListener("click", function () {
+            const targetId = this.getAttribute("data-target");
+            const strip = document.getElementById(targetId);
+            if (!strip) return;
+
+            const direction = this.classList.contains("category-nav-next") ? 1 : -1;
+            const scrollAmount = 260; // píxeles por click (ajusta si quieres)
+
+            strip.scrollBy({
+                left: direction * scrollAmount,
+                behavior: "smooth"
+            });
         });
-        totalEl.textContent = `$${total.toFixed(2)}`;
-        if (pagarLink) { if (items.length > 0) { pagarLink.classList.remove('disabled'); } else { pagarLink.classList.add('disabled'); } }
-        sessionStorage.setItem('fitstyle_total', total.toFixed(2));
-    }
-    document.addEventListener('click', e => {
-        const btn = e.target.closest('[data-addcart]');
-        if (btn) {
-            let d; try { d = JSON.parse(btn.getAttribute('data-addcart')); } catch (_) { return; }
-            const ix = items.findIndex(x => x.nombre === d.Nombre);
-            if (ix >= 0) items[ix].cantidad += 1; else items.push({ nombre: d.Nombre, precio: Number(d.Precio), imagen: d.Imagen, cantidad: 1 });
-            render(); if (offEl && window.bootstrap && window.bootstrap.Offcanvas) { window.bootstrap.Offcanvas.getOrCreateInstance(offEl).show(); }
-        }
-        const rem = e.target.closest('[data-remove]'); if (rem) { items.splice(Number(rem.getAttribute('data-remove')), 1); render(); }
     });
-    document.addEventListener('input', e => {
-        if (e.target.matches('input[type=number][data-idx]')) {
-            const ix = Number(e.target.getAttribute('data-idx')); items[ix].cantidad = Math.max(1, Number(e.target.value || 1)); render();
-        }
-    });
-    render();
 });
+
+
+$(document).ready(function () {
+
+    // AUMENTAR cantidad (+)
+    $(document).on("click", ".btn-qty-plus", function () {
+        var idInv = $(this).data("idinventario");
+
+        $.post("/Carrito/Aumentar", { idInventario: idInv }, function (r) {
+            console.log("Resp Aumentar:", r);
+
+            if (!r.success && r.notLogged) {
+                alert("Debes iniciar sesión.");
+                return;
+            }
+
+            if (r.success) {
+                actualizarBadge(r.count);
+                recargarCarrito();
+            }
+        });
+    });
+
+    // DISMINUIR cantidad (–)
+    $(document).on("click", ".btn-qty-minus", function () {
+        var idInv = $(this).data("idinventario");
+
+        $.post("/Carrito/Disminuir", { idInventario: idInv }, function (r) {
+            console.log("Resp Disminuir:", r);
+
+            if (!r.success && r.notLogged) {
+                alert("Debes iniciar sesión.");
+                return;
+            }
+
+            if (r.success) {
+                actualizarBadge(r.count);
+                recargarCarrito();
+            }
+        });
+    });
+
+    // ELIMINAR producto (🗑️)
+    $(document).on("click", ".btn-remove-item", function () {
+        var idDet = $(this).data("iddetalle");
+
+        $.post("/Carrito/EliminarItem", { idDetalle: idDet }, function (r) {
+            console.log("Resp Eliminar:", r);
+
+            if (!r.success && r.notLogged) {
+                alert("Debes iniciar sesión.");
+                return;
+            }
+
+            if (r.success) {
+                actualizarBadge(r.count);
+                recargarCarrito();
+            }
+        });
+    });
+
+});
+
+
+//  Funcion para agregar al carrito con AJAX y actualizar badge o mejor dicho el icono de notificación del carrito de compras
+$(document).ready(function () {
+
+    $(document).on('click', '.btn-add-cart', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var idProducto = btn.data('product-id');
+
+        $.ajax({
+            url: urlAgregarCarrito,
+            type: 'POST',
+            data: { idProducto: idProducto, cantidad: 1 },
+            success: function (resp) {
+                if (!resp.success) {
+                    console.log("Error al agregar al carrito");
+                    return;
+                }
+
+                var $badge = $("#carrito-count");
+
+                // Si hay items, mostramos y actualizamos el número
+                if (resp.count > 0) {
+                    $badge.text(resp.count)
+                        .removeClass('d-none')
+                        .show();
+
+                    // Animación opcional
+                    $badge.addClass('pulse-badge');
+                    setTimeout(function () {
+                        $badge.removeClass('pulse-badge');
+                    }, 300);
+
+                } else {
+                    // Si el carrito queda vacío, ocultamos el badge
+                    $badge.addClass('d-none').hide();
+                }
+
+                // Recargar el contenido del offcanvas
+                $("#carritoOffcanvas").load(urlOffcanvasCarrito, function () {
+                    var offcanvasEL = document.getElementById('carritoOffcanvas');
+                    var offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEL);
+                    offcanvas.show();
+                });
+            },
+            error: function () {
+                console.error("Error en la petición AJAX.");
+                alert("Error en la petición AJAX.");
+            }
+        });
+    });
+
+});
+
+// Funcion para eliminar del carrito con AJAX y actualizar el icono de notificación del carrito de compras
+function actualizarBadge(count) {
+    var $badge = $("#carrito-count");
+
+    if (count > 0) {
+        $badge.text(count).removeClass("d-none").addClass("pulse-badge");
+        setTimeout(function () {
+            $badge.removeClass("pulse-badge");
+        }, 300);
+    } else {
+        $badge.addClass("d-none");
+    }
+}
+
+function recargarCarrito() {
+    // Cargar TODO el partial dentro del wrapper
+    $("#carritoOffcanvasWrapper").load(urlOffcanvasCarrito, function () {
+
+        // Volvemos a obtener el offcanvas recién renderizado
+        var offcanvasEl = document.getElementById("carritoOffcanvas");
+        if (offcanvasEl) {
+            var offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+            offcanvas.show();
+        }
+    });
+}
+
+
