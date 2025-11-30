@@ -10,19 +10,15 @@ namespace PrototipoFinal.Controllers
 {
     public class CarritoController : Controller
     {
-
-        // Metodo para crear o buscar el carrito "Abierto" del usuario
-        // Campo de contexto global
         private readonly FitStyleDBEntities db = new FitStyleDBEntities();
 
-        // Devuelve null si no hay usuario
+        //Obtine el usuario que se a logueado en el sistema
         private int? GetUsuarioId()
         {
-            // 1. Si ya lo tenemos en Session, lo usamos
+            
             if (Session["UserId"] is int idSesion)
                 return idSesion;
 
-            // 2. Si el usuario está autenticado, lo buscamos por email
             if (User.Identity.IsAuthenticated)
             {
                 var email = User.Identity.Name;
@@ -30,16 +26,17 @@ namespace PrototipoFinal.Controllers
                 var usuario = db.Usuarios.SingleOrDefault(u => u.email == email);
                 if (usuario != null)
                 {
-                    Session["UserId"] = usuario.id_usuario; // cachear en Session
+                    Session["UserId"] = usuario.id_usuario; 
                     return usuario.id_usuario;
                 }
             }
 
-            // 3. No hay usuario
+            
             return null;
         }
 
-        // Recibe el idUsuario por parámetro, NO vuelve a leer Session
+        //Genera un nuevo carrito si no existe uno abierto para el usuario
+        //Este es para abrir el carrito en la tabla Carritos
         private Carritos CrearNuevoCarrito(int idUsuario)
         {
             var carrito = db.Carritos
@@ -62,6 +59,7 @@ namespace PrototipoFinal.Controllers
             return carrito;
         }
 
+        //Obtiene la cantidad de productos en el carrito
         private int GetCartCount(int idUsuario)
         {
             var carrito = db.Carritos
@@ -74,13 +72,15 @@ namespace PrototipoFinal.Controllers
                 .Sum(d => (int?)d.cantidad) ?? 0;
         }
 
+
+        //Metodo para agregar mas productos al carrito
         [HttpPost]
-        public JsonResult Aumentar(int idInventario)
+        public JsonResult AgregarMasProducto(int idInventario)
         {
             var idUsuario = GetUsuarioId();
             if (idUsuario == null)
             {
-                // Lo manejarás en JS: mostrar "Debes iniciar sesión"
+                
                 return Json(new { success = false, notLogged = true });
             }
 
@@ -113,8 +113,9 @@ namespace PrototipoFinal.Controllers
             return Json(new { success = true, count });
         }
 
+        //Metodo para restar productos del carrito
         [HttpPost]
-        public JsonResult Disminuir(int idInventario)
+        public JsonResult RestarProducto(int idInventario)
         {
             var idUsuario = GetUsuarioId();
             if (idUsuario == null)
@@ -146,8 +147,10 @@ namespace PrototipoFinal.Controllers
             return Json(new { success = true, count });
         }
 
+
+        //Metodo para eliminar productos del carrito
         [HttpPost]
-        public JsonResult EliminarItem(int idDetalle)
+        public JsonResult EliminarProducto(int idDetalle)
         {
             var idUsuario = GetUsuarioId();
             if (idUsuario == null)
@@ -179,16 +182,22 @@ namespace PrototipoFinal.Controllers
         }
 
         //Metodo para agregar productos al carrito
+        //Este es para agregar el producto desde la vista de productos
         [HttpPost]
         public ActionResult AgregarPorProducto(int idProducto, int cantidad = 1)
         {
             var idUsuario = GetUsuarioId();
             if (idUsuario == null)
             {
-                return Json(new { success = false, message = "Debes iniciar sesión." });
+                return Json(new
+                {
+                    success = false,
+                    notLogged = true,
+                    message = "Debes iniciar sesión para agregar productos al carrito."
+                });
             }
 
-            // Buscar inventario del producto
+          
             var inventario = db.Inventario_Detalle
                                .FirstOrDefault(i => i.id_producto == idProducto);
 
@@ -199,7 +208,6 @@ namespace PrototipoFinal.Controllers
 
             int idInventario = inventario.id_inventario;
 
-            // Carrito del usuario (lo crea si no existe)
             var carrito = CrearNuevoCarrito(idUsuario.Value);
             int idCarrito = carrito.id_carrito;
 
@@ -226,7 +234,6 @@ namespace PrototipoFinal.Controllers
 
             db.SaveChanges();
 
-            // Total de items para el badge
             var totalItems = db.Carrito_Detalle
                             .Where(d => d.id_carrito == idCarrito)
                             .Sum(d => (int?)d.cantidad) ?? 0;
@@ -235,7 +242,7 @@ namespace PrototipoFinal.Controllers
         }
 
 
-        // Método para renderizar el carrito en el offcanvas
+        // Método para que el offcanvas del carrito muestre los productos agregados
         public ActionResult Offcanvas()
        {
         // Si no hay usuario autenticado, carrito vacío
@@ -278,7 +285,7 @@ namespace PrototipoFinal.Controllers
                              select new CarritoViewModel
                              {
                                  IdDetalle = d.id_carrito_detalle,
-                                 IdInventario = d.id_inventario,   // <--- añade esto si creaste la propiedad
+                                 IdInventario = d.id_inventario,
                                  Nombre = p.nombre_producto,
                                  Precio = p.precio,
                                  Cantidad = d.cantidad,

@@ -87,6 +87,7 @@
     <script>
         var urlAgregarCarrito   = '@(Url.Action("AgregarPorProducto", "Carrito"))';
         var urlOffcanvasCarrito = '@(Url.Action("Offcanvas", "Carrito"))';
+        var urlLogin = '@Url.Action("Login", "Account", new { returnUrl = Request.RawUrl })';
     </script>
 
     <script src="~/Scripts/site.js"></script>

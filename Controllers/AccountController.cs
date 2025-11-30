@@ -15,11 +15,20 @@ namespace Prototipado.Controllers
     {
         private static readonly FitStyleDBEntities db = new FitStyleDBEntities();
 
+        
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult Login(string returnUrl) { ViewBag.ReturnUrl = returnUrl; return View(); }
+        public ActionResult Login(string returnUrl) 
+        { 
+           ViewBag.ReturnUrl = returnUrl; return View(); 
+        }
 
-        [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
+
+
+        //Metodo para el login de usuarios
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Login(string email, string password, string returnUrl)
         {
             var user = db.Usuarios.FirstOrDefault(u => email.Equals(u.email, StringComparison.OrdinalIgnoreCase) && u.password_hash == password);
@@ -40,6 +49,8 @@ namespace Prototipado.Controllers
             return View(new Usuarios());
         }
 
+
+        //Método para registrar un nuevo usuario
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -107,7 +118,6 @@ namespace Prototipado.Controllers
             return RedirectToAction("Login", "Account");
 
         }
-
 
         [Authorize]
         public ActionResult Logout()

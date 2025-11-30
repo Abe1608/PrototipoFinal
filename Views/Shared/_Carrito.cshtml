@@ -1,11 +1,10 @@
 @model IEnumerable<PrototipoFinal.ViewModels.CarritoViewModel>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-</head>
+
 <div class="offcanvas offcanvas-end"
      tabindex="-1"
      id="carritoOffcanvas"
+     data-bs-scroll="true"
+     data-bs-backdrop="true"
      aria-labelledby="carritoOffcanvasLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="carritoOffcanvasLabel">Tu carrito</h5>
@@ -27,53 +26,49 @@
         }
         else
         {
-    <div class="list-group mb-3">
-        @foreach (var item in Model)
-        {
-            <div class="list-group-item d-flex gap-2">
+            <div class="list-group mb-3">
+                @foreach (var item in Model)
+                {
+                    <div class="list-group-item d-flex gap-2">
 
-                <img src="@item.Imagen"
-                     style="width:48px;height:48px;object-fit:cover;border-radius:6px;"
-                     alt="@item.Nombre" />
+                        <img src="@item.Imagen"
+                             style="width:48px;height:48px;object-fit:cover;border-radius:6px;"
+                             alt="@item.Nombre" />
 
-                <div class="flex-grow-1">
-                    <div class="fw-semibold">@item.Nombre</div>
-                    <div class="small text-muted">
-                        @item.Precio.ToString("0.00") x @item.Cantidad =
-                        <strong>@item.Subtotal.ToString("0.00")</strong>
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold">@item.Nombre</div>
+                            <div class="small text-muted">
+                                @item.Precio.ToString("0.00") x @item.Cantidad =
+                                <strong>@item.Subtotal.ToString("0.00")</strong>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2">
+
+                            <button class="btn btn-sm btn-outline-secondary btn-qty-minus"
+                                    type="button"
+                                    data-idinventario="@item.IdInventario">
+                                –
+                            </button>
+
+                            <span class="mx-2">@item.Cantidad</span>
+
+                            <button class="btn btn-sm btn-outline-secondary btn-qty-plus"
+                                    type="button"
+                                    data-idinventario="@item.IdInventario">
+                                +
+                            </button>
+
+                            <button class="btn btn-sm btn-link text-danger btn-remove-item"
+                                    type="button"
+                                    data-iddetalle="@item.IdDetalle">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
+                }
 
-                <div class="d-flex align-items-center gap-2">
-
-                    <!-- BOTÓN MENOS -->
-                    <button class="btn btn-sm btn-outline-secondary btn-qty-minus"
-                            type="button"
-                            data-idinventario="@item.IdInventario">
-                        –
-                    </button>
-
-                    <!-- CANTIDAD -->
-                    <span class="mx-2">@item.Cantidad</span>
-
-                    <!-- BOTÓN MÁS -->
-                    <button class="btn btn-sm btn-outline-secondary btn-qty-plus"
-                            type="button"
-                            data-idinventario="@item.IdInventario">
-                        +
-                    </button>
-
-                    <!-- ELIMINAR -->
-                    <button class="btn btn-sm btn-link text-danger btn-remove-item"
-                            type="button"
-                            data-iddetalle="@item.IdDetalle">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </div>
             </div>
-        }
-
-    </div>
 
             <div class="mt-auto border-top pt-3">
                 <div class="d-flex justify-content-between mb-2">

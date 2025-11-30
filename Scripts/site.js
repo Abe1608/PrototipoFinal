@@ -22,12 +22,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 $(document).ready(function () {
 
-    // AUMENTAR cantidad (+)
+    // Añadir mpas productos
     $(document).on("click", ".btn-qty-plus", function () {
         var idInv = $(this).data("idinventario");
 
-        $.post("/Carrito/Aumentar", { idInventario: idInv }, function (r) {
-            console.log("Resp Aumentar:", r);
+        $.post("/Carrito/AgregarMasProducto", { idInventario: idInv }, function (r) {
+            console.log("Añadir:", r);
 
             if (!r.success && r.notLogged) {
                 alert("Debes iniciar sesión.");
@@ -41,12 +41,12 @@ $(document).ready(function () {
         });
     });
 
-    // DISMINUIR cantidad (–)
+    // Quitar cantidad de productos
     $(document).on("click", ".btn-qty-minus", function () {
         var idInv = $(this).data("idinventario");
 
-        $.post("/Carrito/Disminuir", { idInventario: idInv }, function (r) {
-            console.log("Resp Disminuir:", r);
+        $.post("/Carrito/RestarProducto", { idInventario: idInv }, function (r) {
+            
 
             if (!r.success && r.notLogged) {
                 alert("Debes iniciar sesión.");
@@ -60,13 +60,12 @@ $(document).ready(function () {
         });
     });
 
-    // ELIMINAR producto (🗑️)
+    // Eliminar producto del carrito
     $(document).on("click", ".btn-remove-item", function () {
         var idDet = $(this).data("iddetalle");
 
-        $.post("/Carrito/EliminarItem", { idDetalle: idDet }, function (r) {
-            console.log("Resp Eliminar:", r);
-
+        $.post("/Carrito/EliminarProducto", { idDetalle: idDet }, function (r) {
+           
             if (!r.success && r.notLogged) {
                 alert("Debes iniciar sesión.");
                 return;
@@ -96,36 +95,31 @@ $(document).ready(function () {
             type: 'POST',
             data: { idProducto: idProducto, cantidad: 1 },
             success: function (resp) {
-                if (!resp.success) {
-                    console.log("Error al agregar al carrito");
+
+                if (!resp.success && resp.notLogged) {
+                    alert(resp.message || "Debes iniciar sesión para usar el carrito.");
                     return;
                 }
 
                 var $badge = $("#carrito-count");
 
-                // Si hay items, mostramos y actualizamos el número
+                // Condicional para actualizar el icono de notificación
                 if (resp.count > 0) {
                     $badge.text(resp.count)
                         .removeClass('d-none')
                         .show();
 
-                    // Animación opcional
+                    
                     $badge.addClass('pulse-badge');
                     setTimeout(function () {
                         $badge.removeClass('pulse-badge');
                     }, 300);
 
                 } else {
-                    // Si el carrito queda vacío, ocultamos el badge
                     $badge.addClass('d-none').hide();
                 }
 
-                // Recargar el contenido del offcanvas
-                $("#carritoOffcanvas").load(urlOffcanvasCarrito, function () {
-                    var offcanvasEL = document.getElementById('carritoOffcanvas');
-                    var offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEL);
-                    offcanvas.show();
-                });
+                recargarCarrito();
             },
             error: function () {
                 console.error("Error en la petición AJAX.");
@@ -150,11 +144,11 @@ function actualizarBadge(count) {
     }
 }
 
+
 function recargarCarrito() {
-    // Cargar TODO el partial dentro del wrapper
+    
     $("#carritoOffcanvasWrapper").load(urlOffcanvasCarrito, function () {
 
-        // Volvemos a obtener el offcanvas recién renderizado
         var offcanvasEl = document.getElementById("carritoOffcanvas");
         if (offcanvasEl) {
             var offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
