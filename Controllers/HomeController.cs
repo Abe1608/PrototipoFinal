@@ -1,5 +1,5 @@
 ﻿using PrototipoFinal.Models;
-using PrototipoFinal.ViewsModels;
+using PrototipoFinal.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

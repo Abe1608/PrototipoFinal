@@ -30,6 +30,7 @@ namespace PrototipoFinal.Models
         public bool activo { get; set; }
         public System.DateTime fecha_creacion { get; set; }
         public bool destacado { get; set; }
+        public string seccion { get; set; }
     
         public virtual Categorias Categorias { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

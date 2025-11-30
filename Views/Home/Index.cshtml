@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PrototipoFinal.ViewsModels.DestacadosViewModel>
+﻿@model IEnumerable<PrototipoFinal.ViewModels.DestacadosViewModel>
 @{
     ViewBag.Title = "Inicio";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -24,48 +24,122 @@
                     </a>
                 </div>
             </div>
-
             <div class="col-md-6">
-                
-                <div id="heroCarousel" class="carousel slide shadow rounded-4 overflow-hidden" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="https://images.unsplash.com/photo-1571731956672-ac8e6b1c0973?q=80&w=1200&auto=format&fit=crop"
-                                 class="d-block w-100" alt="Conjunto deportivo">
-                            <div class="carousel-caption d-none d-md-block text-start">
-                                <h5>Conjuntos para entrenamiento</h5>
-                                <p>Combina comodidad y estilo en cada sesión.</p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <img src="https://images.unsplash.com/photo-1526402461234-4f3b3c2c2a1a?q=80&w=1200&auto=format&fit=crop"
-                                 class="d-block w-100" alt="Calzado deportivo">
-                            <div class="carousel-caption d-none d-md-block text-start">
-                                <h5>Calzado para alto rendimiento</h5>
-                                <p>Estabilidad y soporte para tus mejores marcas.</p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <img src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=1200&auto=format&fit=crop"
-                                 class="d-block w-100" alt="Leggings FitStyle">
-                            <div class="carousel-caption d-none d-md-block text-start">
-                                <h5>Prendas FitStyle</h5>
-                                <p>Ideal para gym, running o uso diario.</p>
-                            </div>
-                        </div>
-                    </div>
 
-                    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Anterior</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Siguiente</span>
-                    </button>
+                <div class="hero-carousel-wrapper">
+                    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        </div>
+
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <a href="@Url.Action("Index", "Productos")" class="carousel-link">
+                                    <img src="https://duemosli.blogs.uv.es/files/2016/01/Ropa-deportiva-claves-y-consejos.jpg"
+                                         class="d-block" alt="Conjunto deportivo">
+                                    <div class="carousel-caption text-start">
+                                        <h5>Conjuntos para entrenamiento</h5>
+                                        <p>Combina comodidad y estilo en cada sesión.</p>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="carousel-item">
+                                <a href="@Url.Action("Index", "Productos")" class="carousel-link">
+                                    <img src="https://www.gimnasiosigueiro.com/sites/default/files/field/image/Zapatillas-Nike-700x500.jpg"
+                                         class="d-block" alt="Calzado deportivo">
+                                    <div class="carousel-caption text-start">
+                                        <h5>Calzado para alto rendimiento</h5>
+                                        <p>Estabilidad y soporte para tus mejores marcas.</p>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="carousel-item">
+                                <a href="@Url.Action("Index", "Productos")" class="carousel-link">
+                                    <img src="https://ironforage.com/wp-content/uploads/2024/10/Apparel_YoungLA_UFCFighterTees_10_23_24.jpg"
+                                         class="d-block" alt="Conjuntos">
+                                    <div class="carousel-caption text-start">
+                                        <h5>Prendas De mejor Marca</h5>
+                                        <p>Ideal para gym, running o uso diario.</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Siguiente</span>
+                        </button>
+                    </div>
                 </div>
+
             </div>
 
+
+        </div>
+    </div>
+</section>
+<section class="py-4 bg-white">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2  class="h3 fw-bold mb-0">Categorías</h2>
+            <a href="@Url.Action("Index","Productos")" class="link-btn-outline">
+                Ver todo
+            </a>
+        </div>
+
+        <div class="category-strip-wrapper">
+            <button type="button"
+                    class="category-nav-btn category-nav-prev"
+                    data-target="categoryStrip">
+                ‹
+            </button>
+
+            <div id="categoryStrip" class="category-strip">
+
+                <a href="@Url.Action("Index","Productos", new { idCategoria = 1 })"
+                   class="category-pill">
+                    <div class="category-image">
+                        <img src="https://media.revistagq.com/photos/63f38225cf53bfbacf6f65f5/master/w_1600%2Cc_limit/YANGTSE-SW-SALVIAGREEN_1_2200x.jpg"
+                             alt="Ropa deportiva" />
+                    </div>
+                    <span class="category-label">Ropa deportiva</span>
+                </a>
+
+
+                <a href="@Url.Action("Index","Productos", new {idCategoria = 2 })"
+                   class="category-pill">
+                    <div class="category-image">
+                        <img src="https://eldinero.com.do/wp-content/uploads/calzado-deportivo-adidas.jpg"
+                             alt="Calzado" />
+                    </div>
+                    <span class="category-label">Calzado</span>
+                </a>
+
+
+                <a href="@Url.Action("Index","Productos", new { idCategoria = 3 })"
+                   class="category-pill">
+                    <div class="category-image">
+                        <img src="https://img.freepik.com/foto-gratis/vista-superior-composicion-articulos-deportivos-cuidadosamente-ordenados-organizados_23-2150275221.jpg?semt=ais_hybrid&w=740&q=80"
+                             alt="Accesorios" />
+                    </div>
+                    <span class="category-label">Accesorios</span>
+                </a>
+            </div>
+
+            <button type="button"
+                    class="category-nav-btn category-nav-next"
+                    data-target="categoryStrip">
+                ›
+            </button>
         </div>
     </div>
 </section>
@@ -74,7 +148,7 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="h3 fw-bold mb-0">Destacados</h2>
-            <a href="@Url.Action("Index","Productos")" class="text-decoration-none">
+            <a href="@Url.Action("Index","Productos")" class="link-btn-outline">
                 Ver todo
             </a>
         </div>
