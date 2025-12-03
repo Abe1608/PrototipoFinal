@@ -12,28 +12,35 @@ namespace PrototipoFinal.Controllers
     {
         private readonly FitStyleDBEntities db = new FitStyleDBEntities();
 
-        //Obtine el usuario que se a logueado en el sistema
+        //Obtiene el usuario que se a logueado en el sistema
         private int? GetUsuarioId()
         {
-            
+           
+            if (!User.Identity.IsAuthenticated)
+            {
+                
+                Session["UserId"] = null;
+                return null;
+            }
+
+       
             if (Session["UserId"] is int idSesion)
                 return idSesion;
 
-            if (User.Identity.IsAuthenticated)
-            {
-                var email = User.Identity.Name;
+           
+            var email = User.Identity.Name;
 
-                var usuario = db.Usuarios.SingleOrDefault(u => u.email == email);
-                if (usuario != null)
-                {
-                    Session["UserId"] = usuario.id_usuario; 
-                    return usuario.id_usuario;
-                }
+            var usuario = db.Usuarios.SingleOrDefault(u => u.email == email);
+            if (usuario != null)
+            {
+                Session["UserId"] = usuario.id_usuario; 
+                return usuario.id_usuario;
             }
 
             
             return null;
         }
+
 
         //Genera un nuevo carrito si no existe uno abierto para el usuario
         //Este es para abrir el carrito en la tabla Carritos
@@ -193,7 +200,6 @@ namespace PrototipoFinal.Controllers
                 {
                     success = false,
                     notLogged = true,
-                    message = "Debes iniciar sesión para agregar productos al carrito."
                 });
             }
 

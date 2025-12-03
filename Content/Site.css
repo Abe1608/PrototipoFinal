@@ -1,4 +1,11 @@
-body{background:#f8f9fa}.card-img-top{object-fit:cover;height:220px}
+body {
+    background: #f8f9fa
+}
+
+.card-img-top {
+    object-fit: cover;
+    height: 220px
+}
 
 .hero-carousel-wrapper {
     max-width: 720px;
@@ -249,3 +256,27 @@ body{background:#f8f9fa}.card-img-top{object-fit:cover;height:220px}
     transform: scale(1.2);
     transition: transform 0.2s ease;
 }
+
+
+/*Footer*/
+
+.footer-link {
+    color: #6c757d;
+    text-decoration: none;
+}
+
+    .footer-link:hover {
+        color: #000;
+        text-decoration: underline;
+    }
+
+.footer-social-icon {
+    font-size: 1.4rem;
+    color: #000;
+    text-decoration: none;
+}
+
+    .footer-social-icon:hover {
+        color: #111;
+        transform: translateY(-1px);
+    }

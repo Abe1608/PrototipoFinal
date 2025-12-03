@@ -97,7 +97,7 @@ $(document).ready(function () {
             success: function (resp) {
 
                 if (!resp.success && resp.notLogged) {
-                    alert(resp.message || "Debes iniciar sesión para usar el carrito.");
+                    window.location.href = urlLogin;
                     return;
                 }
 

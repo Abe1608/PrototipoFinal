@@ -123,6 +123,10 @@ namespace Prototipado.Controllers
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
+
+            Session.Clear();        
+            Session.RemoveAll();    
+            Session.Abandon();
             return RedirectToAction("Index", "Home");
         }
     }

@@ -41,11 +41,43 @@ namespace Prototipado.Controllers
             return View(productos);
         }
 
+        //Metodo para ver los detalles de un producto
         public ActionResult Details(int id)
         {
+           
             var prod = db.Productos.Find(id);
             if (prod == null) return HttpNotFound();
-            return View(prod);
+
+
+            var variantes = db.Inventario_Detalle
+                              .Where(i => i.id_producto == id && i.stock_actual > 0)
+                              .ToList();
+
+         
+            var colores = variantes
+                .Where(v => v.Colores_Catalogo != null)
+                .Select(v => v.Colores_Catalogo.nombre_color)
+                .Distinct()
+                .ToList();
+
+            
+            var tallas = variantes
+                .Where(v => v.Tallas_Catalogo != null)
+                .Select(v => v.Tallas_Catalogo.nombre_talla)
+                .Distinct()
+                .ToList();
+
+            
+            var vm = new ProductoDetalleViewModel
+            {
+                Producto = prod,
+                Colores = colores,
+                Tallas = tallas
+            };
+
+            
+            return View(vm);
         }
+
     }
 }

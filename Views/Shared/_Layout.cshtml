@@ -38,45 +38,230 @@
             }
         }
     }
-    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="@Url.Action("Index","Home")">FitStyle</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
-            <div id="nav" class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index","Home")">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index","Productos")">Catálogo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Pagar","Checkout")">Pagos</a></li>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container-fluid px-4">
+
+
+            <a class="navbar-brand d-flex align-items-center gap-2" href="@Url.Action("Index","Home")">
+                <img src="~/images/logo/Logo.png"
+                     alt="FitStyle"
+                     style="height: 48px; width: auto; object-fit: contain;" />
+                <span class="fw-bold fs-4">FitStyle</span>
+            </a>
+
+
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            @{
+
+                var currentController = (string)ViewContext.RouteData.Values["controller"];
+                var currentAction = (string)ViewContext.RouteData.Values["action"];
+            }
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link @(currentController == "Home" ? "active fw-semibold" : "")"
+                           href="@Url.Action("Index", "Home")">
+                            Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(currentController == "Productos" ? "active fw-semibold" : "")"
+                           href="@Url.Action("Index", "Productos")">
+                            Catálogo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(currentController == "Checkout" ? "active fw-semibold" : "")"
+                           href="@Url.Action("Pagar", "Checkout")">
+                            Pagos
+                        </a>
+                    </li>
                 </ul>
-                <div class="d-flex gap-2">
+
+
+                <div class="d-flex align-items-center gap-3">
+
+
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <span class="navbar-text small text-muted">Hola, @User.Identity.Name</span>
-                        <a class="btn btn-outline-secondary" href="@Url.Action("Logout","Account")">Cerrar sesión</a>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2 dropdown-toggle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="bi bi-person-circle"></i>
+                                <span class="d-none d-sm-inline">@User.Identity.Name</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Logout","Account")">
+                                        <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     }
                     else
                     {
-                        <a class="btn btn-dark" href="@Url.Action("Login","Account", new { returnUrl = Request.RawUrl })">Iniciar sesión</a>
+                        <a class="btn btn-dark btn-sm d-flex align-items-center gap-2"
+                           href="@Url.Action("Login","Account", new { returnUrl = Request.RawUrl })">
+                            <i class="bi bi-person"></i>
+                            <span>Iniciar sesión</span>
+                        </a>
                     }
-                    <button class="btn btn-outline-secondary d-flex align-items-center gap-2 position-relative"
+
+
+                    <button class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2 position-relative"
                             type="button"
                             data-bs-toggle="offcanvas"
                             data-bs-target="#carritoOffcanvas">
                         <i class="bi bi-cart3" style="font-size: 18px;"></i>
-                        Carrito
+                        <span class="d-none d-sm-inline">Carrito</span>
 
                         <span id="carrito-count"
                               class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger @(carritoCount == 0 ? "d-none" : "")"
-                              style="font-size: 12px;">
+                              style="font-size: 11px;">
                             @carritoCount
                         </span>
                     </button>
+
                 </div>
             </div>
         </div>
     </nav>
 
+
     <main class="container py-4">@RenderBody()</main>
+
+    <!-- =========================
+          FOOTER
+    ========================== -->
+    <footer class="bg-white border-top mt-5">
+        <div class="container py-5">
+
+            <div class="row g-4">
+
+                <!-- 3 COLUMNAS DE ENLACES -->
+                <div class="col-lg-6">
+                    <div class="row">
+
+                        <div class="col-6 col-md-4 mb-4 mb-md-0">
+                            <h6 class="fw-bold text-uppercase small mb-3">
+                                Información
+                            </h6>
+                            <ul class="list-unstyled small mb-0">
+                                <li><a href="#" class="footer-link">Sobre FitStyle</a></li>
+                                <li><a href="#" class="footer-link">Sostenibilidad</a></li>
+                                <li><a href="#" class="footer-link">Carreras</a></li>
+                                <li><a href="#" class="footer-link">Descuento estudiantes</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-6 col-md-4 mb-4 mb-md-0">
+                            <h6 class="fw-bold text-uppercase small mb-3">
+                                Ayuda y soporte
+                            </h6>
+                            <ul class="list-unstyled small mb-0">
+                                <li><a href="#" class="footer-link">Información de envío</a></li>
+                                <li><a href="#" class="footer-link">Cambios y devoluciones</a></li>
+                                <li><a href="#" class="footer-link">Guía de tallas</a></li>
+                                <li><a href="#" class="footer-link">Cómo comprar</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-12 col-md-4">
+                            <h6 class="fw-bold text-uppercase small mb-3">
+                                Atención al cliente
+                            </h6>
+                            <ul class="list-unstyled small mb-0">
+                                <li><a href="#" class="footer-link">Contáctanos</a></li>
+                                <li><a href="#" class="footer-link">Preguntas frecuentes</a></li>
+                                <li><a href="#" class="footer-link">Estado de pedido</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+
+                    
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-uppercase small mb-3">
+                            Encuéntranos en
+                        </h6>
+                        <div class="d-flex align-items-center flex-wrap gap-3">
+                            <a href="#" class="footer-social-icon"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="footer-social-icon"><i class="bi bi-instagram"></i></a>
+                            <a href="#" class="footer-social-icon"><i class="bi bi-tiktok"></i></a>
+                            <a href="#" class="footer-social-icon"><i class="bi bi-youtube"></i></a>
+                            <a href="#" class="footer-social-icon"><i class="bi bi-twitter-x"></i></a>
+                        </div>
+                    </div>
+
+                    
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-uppercase small mb-3">
+                            Suscríbete para recibir ofertas y novedades
+                        </h6>
+                        <form class="row g-2">
+                            <div class="col-12 col-sm-8">
+                                <input type="email"
+                                       class="form-control form-control-sm"
+                                       placeholder="Tu correo electrónico" />
+                            </div>
+                            <div class="col-12 col-sm-4 d-grid">
+                                <button type="button" class="btn btn-dark btn-sm">
+                                    Suscribirme
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    
+                    <div>
+                        <h6 class="fw-bold text-uppercase small mb-3">
+                            Aceptamos
+                        </h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-light text-dark border small">Visa</span>
+                            <span class="badge bg-light text-dark border small">Mastercard</span>
+                            <span class="badge bg-light text-dark border small">American Express</span>
+                            <span class="badge bg-light text-dark border small">PayPal</span>
+                            <span class="badge bg-light text-dark border small">Apple Pay</span>
+                            <span class="badge bg-light text-dark border small">Google Pay</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            
+            <div class="border-top mt-4 pt-3">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 small text-muted">
+                    <div>
+                        © @DateTime.Now.Year FitStyle. Todos los derechos reservados.
+                    </div>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#" class="footer-link">Política de privacidad</a>
+                        <a href="#" class="footer-link">Términos y condiciones</a>
+                        <a href="#" class="footer-link">Cookies</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+  
 
     <div id="carritoOffcanvasWrapper">
         @Html.Action("Offcanvas", "Carrito")

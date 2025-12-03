@@ -1,47 +1,221 @@
+@model PrototipoFinal.ViewModels.ProductoDetalleViewModel
 
-@model PrototipoFinal.Models.Productos
 @{
     ViewBag.Title = "Detalles de producto";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="row g-4">
-    <div class="col-md-6">
-        <img src="@Model.url_imagen_principal"
-             class="img-fluid rounded-4 shadow-sm"
-             alt="@Model.nombre_producto" />
-    </div>
 
-    <div class="col-md-6">
-        <div class="text-muted small">
-            @Model.Categorias?.nombre_categoria
+<div class="container py-5">
+
+    <div class="row g-4">
+
+        <div class="col-md-6 text-center">
+            <img src="@Model.Producto.url_imagen_principal"
+                 alt="@Model.Producto.nombre_producto"
+                 class="img-fluid rounded-4"
+                 style="max-height: 650px; object-fit: cover; width: 100%;" />
         </div>
 
-        <h1 class="h4 fw-bold mb-1">@Model.nombre_producto</h1>
+        <div class="col-md-6">
 
-        <div class="fw-bold fs-4">
-            $@Model.precio.ToString("0.00")
-        </div>
+            
+            <div class="text-muted small mb-1">
+                @Model.Producto.Categorias.nombre_categoria
+            </div>
 
-        @if (!string.IsNullOrEmpty(Model.descripcion_larga))
-        {
-            <p class="mt-3 text-muted">@Model.descripcion_larga</p>
-        }
-        else if (!string.IsNullOrEmpty(Model.descripcion_corta))
-        {
-            <p class="mt-3 text-muted">@Model.descripcion_corta</p>
-        }
+            
+            <h1 class="h3 fw-bold mb-2">
+                @Model.Producto.nombre_producto
+            </h1>
 
-        <div class="d-flex gap-2 mt-4">
-            <button class="btn btn-dark"
-                    type="button"
-                    data-addcart='{"Id": @Model.id_producto, "Nombre":"@Model.nombre_producto", "Precio": @Model.precio, "Imagen":"@Model.url_imagen_principal"}'>
-                Agregar al carrito
-            </button>
+           
+            <div class="fs-3 fw-bold text-success mb-3">
+                $@Model.Producto.precio.ToString("0.00")
+            </div>
 
-            <a class="btn btn-outline-secondary"
-               href="@Url.Action("Index","Productos")">
-                Volver al catálogo
-            </a>
+            @if (!string.IsNullOrEmpty(Model.Producto.descripcion_larga))
+            {
+                <p class="text-muted">@Model.Producto.descripcion_larga</p>
+            }
+            else if (!string.IsNullOrEmpty(Model.Producto.descripcion_corta))
+            {
+                <p class="text-muted">@Model.Producto.descripcion_corta</p>
+            }
+
+            
+            @if (Model.Colores != null && Model.Colores.Any())
+            {
+                <div class="mt-4">
+                    <span class="fw-semibold d-block mb-2">Color</span>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var color in Model.Colores)
+                        {
+                            <button type="button"
+                                    class="btn btn-outline-secondary btn-sm color-option"
+                                    data-color="@color">
+                                @color
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.Tallas != null && Model.Tallas.Any())
+            {
+                <div class="mt-4">
+                    <span class="fw-semibold d-block mb-2">Talla</span>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var talla in Model.Tallas)
+                        {
+                            <button type="button"
+                                    class="btn btn-outline-secondary btn-sm size-option"
+                                    data-size="@talla">
+                                @talla
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+
+          
+            <div class="d-flex align-items-center mt-4">
+                <span class="me-3 fw-semibold">Cantidad</span>
+
+                <button type="button"
+                        class="btn btn-outline-secondary btn-sm"
+                        id="qty-minus">
+                    -
+                </button>
+
+                <span class="mx-3 fs-5" id="qty-value">1</span>
+
+                <button type="button"
+                        class="btn btn-outline-secondary btn-sm"
+                        id="qty-plus">
+                    +
+                </button>
+            </div>
+
+            
+            <div class="d-flex gap-3 mt-4">
+                <button type="button"
+                        id="btnAddDetail"
+                        class="btn btn-dark px-4 py-2"
+                        data-product-id="@Model.Producto.id_producto">
+                    Agregar al carrito
+                </button>
+
+                <a href="@Url.Action("Index", "Productos")"
+                   class="btn btn-outline-secondary px-4 py-2">
+                    Volver al catálogo
+                </a>
+            </div>
+
         </div>
     </div>
 </div>
+
+<script>
+    (function () {
+        var qty = 1;
+        var qtySpan = document.getElementById("qty-value");
+        var btnPlus = document.getElementById("qty-plus");
+        var btnMinus = document.getElementById("qty-minus");
+        var btnAdd = document.getElementById("btnAddDetail");
+
+        if (btnPlus) {
+            btnPlus.addEventListener("click", function () {
+                qty++;
+                qtySpan.innerText = qty;
+            });
+        }
+
+        if (btnMinus) {
+            btnMinus.addEventListener("click", function () {
+                if (qty > 1) {
+                    qty--;
+                    qtySpan.innerText = qty;
+                }
+            });
+        }
+
+       
+        var colorButtons = document.querySelectorAll(".color-option");
+        colorButtons.forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                colorButtons.forEach(function (b) {
+                    b.classList.remove("btn-dark", "text-white");
+                    b.classList.add("btn-outline-secondary");
+                });
+                btn.classList.remove("btn-outline-secondary");
+                btn.classList.add("btn-dark", "text-white");
+            });
+        });
+
+        
+        var sizeButtons = document.querySelectorAll(".size-option");
+        sizeButtons.forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                sizeButtons.forEach(function (b) {
+                    b.classList.remove("btn-dark", "text-white");
+                    b.classList.add("btn-outline-secondary");
+                });
+                btn.classList.remove("btn-outline-secondary");
+                btn.classList.add("btn-dark", "text-white");
+            });
+        });
+
+        
+        if (btnAdd) {
+            btnAdd.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                var idProd = this.getAttribute("data-product-id");
+
+             
+                var body = "idProducto=" + encodeURIComponent(idProd)
+                    + "&cantidad=" + encodeURIComponent(qty);
+
+                fetch(urlAgregarCarrito, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+                    },
+                    body: body
+                })
+                    .then(function (r) { return r.json(); })
+                    .then(function (resp) {
+                        if (!resp.success && resp.notLogged) {
+                            if (typeof urlLogin !== "undefined") {
+                                window.location.href = urlLogin;
+                            } else {
+                                alert("Debes iniciar sesión.");
+                            }
+                            return;
+                        }
+
+                        if (!resp.success) {
+                            if (resp.message) {
+                                alert(resp.message);
+                            } else {
+                                alert("No se pudo agregar al carrito.");
+                            }
+                            return;
+                        }
+
+                       
+                        if (typeof actualizarBadge === "function") {
+                            actualizarBadge(resp.count);
+                        }
+                        if (typeof recargarCarrito === "function") {
+                            recargarCarrito();
+                        }
+                    })
+                    .catch(function () {
+                        alert("Error al agregar al carrito.");
+                    });
+            });
+        }
+    })();
+</script>
+
