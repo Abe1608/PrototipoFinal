@@ -25,10 +25,6 @@ namespace PrototipoFinal.Models
         }
 
         public int id_usuario { get; set; }
-        [StringLength(80, ErrorMessage ="No debe sobrepasar de los 80 caracteres")]
-        [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
-        [RegularExpression("^[a-zA-Z][a-zA-Z0-9]{3,19}$",
-    ErrorMessage = "El nombre de usuario debe iniciar con una letra y solo puede contener letras y números (4–20 caracteres).")]
         public string nombre_usuario { get; set; }
         [DataType(DataType.EmailAddress)]
         public string email { get; set; }
