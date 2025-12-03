@@ -39,6 +39,21 @@
           <Property Name="id_color" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="nombre_color" Type="nvarchar" MaxLength="30" Nullable="false" />
         </EntityType>
+        <EntityType Name="Direcciones_Usuario">
+          <Key>
+            <PropertyRef Name="id_direccion" />
+          </Key>
+          <Property Name="id_direccion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_usuario" Type="int" Nullable="false" />
+          <Property Name="linea1" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="linea2" Type="nvarchar" MaxLength="150" />
+          <Property Name="ciudad" Type="nvarchar" MaxLength="80" Nullable="false" />
+          <Property Name="departamento" Type="nvarchar" MaxLength="80" />
+          <Property Name="pais" Type="nvarchar" MaxLength="80" Nullable="false" />
+          <Property Name="codigo_postal" Type="nvarchar" MaxLength="20" />
+          <Property Name="telefono_contacto" Type="nvarchar" MaxLength="20" />
+          <Property Name="es_principal" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Facturas">
           <Key>
             <PropertyRef Name="id_factura" />
@@ -97,7 +112,7 @@
           <Property Name="activo" Type="bit" Nullable="false" />
           <Property Name="fecha_creacion" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="destacado" Type="bit" Nullable="false" />
-          <Property Name="seccion" Type="nvarchar" MaxLength="20" />
+          <Property Name="seccion" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="Tallas_Catalogo">
           <Key>
@@ -150,6 +165,18 @@
               <PropertyRef Name="id_usuario" />
             </Principal>
             <Dependent Role="Carritos">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Direcciones_Usuario_Usuarios">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="Direcciones_Usuario" Type="Self.Direcciones_Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="Direcciones_Usuario">
               <PropertyRef Name="id_usuario" />
             </Dependent>
           </ReferentialConstraint>
@@ -267,6 +294,7 @@
           <EntitySet Name="Carritos" EntityType="Self.Carritos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Categorias" EntityType="Self.Categorias" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Colores_Catalogo" EntityType="Self.Colores_Catalogo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Direcciones_Usuario" EntityType="Self.Direcciones_Usuario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Facturas" EntityType="Self.Facturas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Inventario_Detalle" EntityType="Self.Inventario_Detalle" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Pedido_Detalle" EntityType="Self.Pedido_Detalle" Schema="dbo" store:Type="Tables" />
@@ -285,6 +313,10 @@
           <AssociationSet Name="FK_Carritos_Usuarios" Association="Self.FK_Carritos_Usuarios">
             <End Role="Usuarios" EntitySet="Usuarios" />
             <End Role="Carritos" EntitySet="Carritos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Direcciones_Usuario_Usuarios" Association="Self.FK_Direcciones_Usuario_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Direcciones_Usuario" EntitySet="Direcciones_Usuario" />
           </AssociationSet>
           <AssociationSet Name="FK_Facturas_Pedidos" Association="Self.FK_Facturas_Pedidos">
             <End Role="Pedidos" EntitySet="Pedidos" />
@@ -439,7 +471,7 @@
           <Property Name="destacado" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Categorias" Relationship="Self.FK_Productos_Categorias" FromRole="Productos" ToRole="Categorias" />
           <NavigationProperty Name="Inventario_Detalle" Relationship="Self.FK_Inv_Prod" FromRole="Productos" ToRole="Inventario_Detalle" />
-          <Property Name="seccion" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="seccion" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Tallas_Catalogo">
           <Key>
@@ -463,6 +495,7 @@
           <NavigationProperty Name="Carritos" Relationship="Self.FK_Carritos_Usuarios" FromRole="Usuarios" ToRole="Carritos" />
           <NavigationProperty Name="Facturas" Relationship="Self.FK_Facturas_Usuarios" FromRole="Usuarios" ToRole="Facturas" />
           <NavigationProperty Name="Pedidos" Relationship="Self.FK_Pedidos_Usuarios" FromRole="Usuarios" ToRole="Pedidos" />
+          <NavigationProperty Name="Direcciones_Usuario" Relationship="FitStyleDBModel.FK_Direcciones_Usuario_Usuarios" FromRole="Usuarios" ToRole="Direcciones_Usuario" />
         </EntityType>
         <Association Name="FK_CarritoDet_Carritos">
           <End Role="Carritos" Type="Self.Carritos" Multiplicity="1" />
@@ -668,7 +701,40 @@
             <End Role="Usuarios" EntitySet="Usuarios" />
             <End Role="Pedidos" EntitySet="Pedidos" />
           </AssociationSet>
+          <EntitySet Name="Direcciones_Usuario" EntityType="FitStyleDBModel.Direcciones_Usuario" />
+          <AssociationSet Name="FK_Direcciones_Usuario_Usuarios" Association="FitStyleDBModel.FK_Direcciones_Usuario_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Direcciones_Usuario" EntitySet="Direcciones_Usuario" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Direcciones_Usuario">
+          <Key>
+            <PropertyRef Name="id_direccion" />
+          </Key>
+          <Property Name="id_direccion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_usuario" Type="Int32" Nullable="false" />
+          <Property Name="linea1" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="linea2" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ciudad" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="true" />
+          <Property Name="departamento" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+          <Property Name="pais" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="true" />
+          <Property Name="codigo_postal" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="telefono_contacto" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="es_principal" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Usuarios" Relationship="FitStyleDBModel.FK_Direcciones_Usuario_Usuarios" FromRole="Direcciones_Usuario" ToRole="Usuarios" />
+        </EntityType>
+        <Association Name="FK_Direcciones_Usuario_Usuarios">
+          <End Type="FitStyleDBModel.Usuarios" Role="Usuarios" Multiplicity="1" />
+          <End Type="FitStyleDBModel.Direcciones_Usuario" Role="Direcciones_Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="Direcciones_Usuario">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -796,6 +862,22 @@
                 <ScalarProperty Name="nombre_completo" ColumnName="nombre_completo" />
                 <ScalarProperty Name="es_admin" ColumnName="es_admin" />
                 <ScalarProperty Name="fecha_registro" ColumnName="fecha_registro" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Direcciones_Usuario">
+            <EntityTypeMapping TypeName="FitStyleDBModel.Direcciones_Usuario">
+              <MappingFragment StoreEntitySet="Direcciones_Usuario">
+                <ScalarProperty Name="es_principal" ColumnName="es_principal" />
+                <ScalarProperty Name="telefono_contacto" ColumnName="telefono_contacto" />
+                <ScalarProperty Name="codigo_postal" ColumnName="codigo_postal" />
+                <ScalarProperty Name="pais" ColumnName="pais" />
+                <ScalarProperty Name="departamento" ColumnName="departamento" />
+                <ScalarProperty Name="ciudad" ColumnName="ciudad" />
+                <ScalarProperty Name="linea2" ColumnName="linea2" />
+                <ScalarProperty Name="linea1" ColumnName="linea1" />
+                <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+                <ScalarProperty Name="id_direccion" ColumnName="id_direccion" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

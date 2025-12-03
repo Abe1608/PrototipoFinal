@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Método de pago";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-4">
+    <h1 class="h4 mb-3">Selecciona tu método de pago</h1>
+
+    @using (Html.BeginForm("MetodoPago", "Checkout", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="w-100">
+                    <input type="radio"
+                           name="metodo"
+                           value="Tarjeta"
+                           class="btn-check"
+                           autocomplete="off"
+                           checked />
+                    <div class="btn btn-outline-dark w-100 text-start">
+                        <div class="fw-bold">Tarjeta de crédito o débito</div>
+                        <small class="text-muted">Visa, Mastercard, etc.</small>
+                    </div>
+                </label>
+            </div>
+
+            <div class="col-md-6">
+                <label class="w-100">
+                    <input type="radio"
+                           name="metodo"
+                           value="PayPal"
+                           class="btn-check"
+                           autocomplete="off" />
+                    <div class="btn btn-outline-secondary w-100 text-start">
+                        <div class="fw-bold">PayPal</div>
+                        <small class="text-muted">Paga con tu cuenta PayPal.</small>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-dark mt-4">
+            Continuar
+        </button>
+    }
+</div>
+
+

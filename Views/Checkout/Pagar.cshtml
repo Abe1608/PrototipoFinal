@@ -1,34 +1,71 @@
-
 @{
-  ViewBag.Title="Pago";
-  Layout="~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Pago";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string metodo = ViewBag.MetodoPago as string ?? "Tarjeta";
+    decimal total = ViewBag.Total != null ? (decimal)ViewBag.Total : 0m;
 }
+
 <h1 class="h4 mb-3">Realizar pago</h1>
+
+<p class="text-muted mb-3">
+    Método de pago seleccionado: <strong>@metodo</strong>
+</p>
+
 <div class="row">
-  <div class="col-md-6">
-      <div class="mb-3">
-        <label class="form-label">Nombre en la tarjeta</label>
-        <input name="nombre" class="form-control" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Número de tarjeta</label>
-        <input name="tarjeta" class="form-control" maxlength="19" placeholder="4111 1111 1111 1111" required />
-      </div>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Vencimiento</label>
-          <input name="vencimiento" class="form-control" placeholder="MM/AA" required />
-        </div>
-        <div class="col-md-6 mb-3">
-          <label class="form-label">CVV</label>
-          <input name="cvv" class="form-control" maxlength="4" required />
-        </div>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Total</label>
-        <input name="total" id="totalInput" class="form-control" readonly value="0.00" />
-      </div>
-      <button class="btn btn-dark">Pagar ahora</button>
-      <a class="btn btn-outline-secondary ms-2" href="@Url.Action("Index","Productos")">Seguir comprando</a>
-  </div>
+    <div class="col-md-6">
+
+        @if (metodo == "Tarjeta")
+        {
+            using (Html.BeginForm("Pagar", "Checkout", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="metodoPago" value="@metodo" />
+
+                <div class="mb-3">
+                    <label class="form-label">Nombre en la tarjeta</label>
+                    <input name="nombre" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Número de tarjeta</label>
+                    <input name="tarjeta" class="form-control"
+                           placeholder="4111 1111 1111 1111"
+                           required />
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label">Vencimiento</label>
+                        <input name="vencimiento" class="form-control" placeholder="MM/AA" required />
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label">CVV</label>
+                        <input name="cvv" class="form-control" required />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Total</label>
+                    <input name="total"
+                           class="form-control"
+                           readonly
+                           value="@total.ToString("0.00")" />
+                </div>
+                <button class="btn btn-dark">Pagar ahora</button>
+                <a class="btn btn-outline-secondary ms-2" href="@Url.Action("Index","Productos")">Seguir comprando</a>
+            }
+        }
+        else
+        {
+            using (Html.BeginForm("Pagar", "Checkout", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="metodoPago" value="@metodo" />
+                <input type="hidden" name="total" value="@total.ToString("0.00")" />
+                <p>Te enviaremos un post digital de paypal para completar tu pago.</p>
+                <button class="btn btn-dark">Confirmar pago con PayPal</button>
+                <a class="btn btn-outline-secondary ms-2" href="@Url.Action("Index","Productos")">Seguir comprando</a>
+            }
+        }
+
+    </div>
 </div>

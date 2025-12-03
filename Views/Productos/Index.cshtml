@@ -3,8 +3,48 @@
 @{
     ViewBag.Title = "Catálogo";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var categorias = ViewBag.Categorias as List<SelectListItem>;
+    var secciones = ViewBag.Secciones as List<string>;
+    string seccionSeleccionada = ViewBag.SeccionSeleccionada as string;
 }
 <h1 class="h3 mb-3">Catálogo</h1>
+
+
+<form method="get" class="filter-bar mb-4">
+    <div class="row g-3 align-items-end">
+
+        <div class="col-md-4">
+            <label class="form-label">Categoría</label>
+            @Html.DropDownList(
+                "idCategoria",
+                categorias ?? new List<SelectListItem>(),
+                "Todas",
+                new { @class = "form-select" }
+            )
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Sección</label>
+            <select name="seccion" class="form-select">
+                <option value="">Todas</option>
+                <option value="Hombre" @(seccionSeleccionada == "Hombre" ? "selected" : "")>Hombre</option>
+                <option value="Mujer" @(seccionSeleccionada == "Mujer" ? "selected" : "")>Mujer</option>
+                <option value="Niño" @(seccionSeleccionada == "Niño" ? "selected" : "")>Niños</option>
+            </select>
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+            <button type="submit" class="btn btn-dark mt-3 flex-grow-1">
+                Filtrar
+            </button>
+            <a href="@Url.Action("Index", "Productos")"
+               class="btn btn-outline-secondary mt-3">
+                Limpiar
+            </a>
+        </div>
+
+    </div>
+</form>
 <div class="row g-3">
     @foreach (var item in Model)
     {

@@ -22,8 +22,9 @@ namespace PrototipoFinal.Models
             this.Carritos = new HashSet<Carritos>();
             this.Facturas = new HashSet<Facturas>();
             this.Pedidos = new HashSet<Pedidos>();
+            this.Direcciones_Usuario = new HashSet<Direcciones_Usuario>();
         }
-
+    
         public int id_usuario { get; set; }
         public string nombre_usuario { get; set; }
         [DataType(DataType.EmailAddress)]
@@ -32,6 +33,7 @@ namespace PrototipoFinal.Models
         [StringLength(15, MinimumLength = 6)]
         [PasswordPropertyText(true)]
         public string password_hash { get; set; }
+
         [StringLength(80, ErrorMessage = "No debe sobrepasar de los 80 caracteres")]
         public string nombre_completo { get; set; }
         public bool es_admin { get; set; }
@@ -43,5 +45,7 @@ namespace PrototipoFinal.Models
         public virtual ICollection<Facturas> Facturas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Pedidos> Pedidos { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Direcciones_Usuario> Direcciones_Usuario { get; set; }
     }
 }

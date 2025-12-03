@@ -82,7 +82,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link @(currentController == "Checkout" ? "active fw-semibold" : "")"
-                           href="@Url.Action("Pagar", "Checkout")">
+                           href="@Url.Action("MetodoPago", "Checkout")">
                             Pagos
                         </a>
                     </li>
@@ -104,6 +104,12 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
+                                    <a class="dropdown-item" href="@Url.Action("Perfil","Account")">
+                                        <i class="bi bi-pencil-square me-2"></i>Editar perfil
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
                                     <a class="dropdown-item" href="@Url.Action("Logout","Account")">
                                         <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
                                     </a>
@@ -119,6 +125,7 @@
                             <span>Iniciar sesión</span>
                         </a>
                     }
+
 
 
                     <button class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2 position-relative"

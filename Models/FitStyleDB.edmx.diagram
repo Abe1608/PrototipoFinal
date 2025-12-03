@@ -28,6 +28,8 @@
         <AssociationConnector Association="FitStyleDBModel.FK_PedDet_Inventario" ManuallyRouted="false" />
         <AssociationConnector Association="FitStyleDBModel.FK_PedDet_Pedidos" ManuallyRouted="false" />
         <AssociationConnector Association="FitStyleDBModel.FK_Pedidos_Usuarios" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="FitStyleDBModel.Direcciones_Usuario" Width="1.5" PointX="5.25" PointY="18.25" />
+        <AssociationConnector Association="FitStyleDBModel.FK_Direcciones_Usuario_Usuarios" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

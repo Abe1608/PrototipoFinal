@@ -280,3 +280,33 @@ body {
         color: #111;
         transform: translateY(-1px);
     }
+
+
+/* Página de perfil de usuario */
+.profile-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.profile-card {
+    border-radius: 16px;
+    border: 1px solid #eee;
+}
+
+    .profile-card .card-title {
+        font-weight: 600;
+    }
+
+    .profile-card .form-label {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .profile-card input.form-control {
+        border-radius: 10px;
+    }
+
+    .profile-card hr {
+        opacity: 0.2;
+    }
+

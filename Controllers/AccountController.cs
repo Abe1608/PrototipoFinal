@@ -1,5 +1,6 @@
 
 using PrototipoFinal.Models;
+using PrototipoFinal.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
@@ -129,5 +130,88 @@ namespace Prototipado.Controllers
             Session.Abandon();
             return RedirectToAction("Index", "Home");
         }
+
+
+
+        [Authorize]
+        public ActionResult Perfil()
+        {
+            using (var db = new FitStyleDBEntities())
+            {
+                var email = User.Identity.Name;
+                var usuario = db.Usuarios.SingleOrDefault(u => u.email == email);
+                if (usuario == null) return HttpNotFound();
+
+                // Buscar dirección principal (si existe)
+                var dir = usuario.Direcciones_Usuario
+                                 .FirstOrDefault(d => d.es_principal);
+
+                var model = new PerfilViewModel
+                {
+                    NombreCompleto = usuario.nombre_completo,
+
+                    // Teléfono viene de la dirección principal
+                    Telefono = dir?.telefono_contacto,          // o dir?.telefono_contacto
+
+                    DireccionLinea1 = dir?.linea1,
+                    DireccionLinea2 = dir?.linea2,
+                    Ciudad = dir?.ciudad,
+                    Departamento = dir?.departamento,
+                    Pais = dir?.pais,
+                    CodigoPostal = dir?.codigo_postal
+                };
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public ActionResult Perfil(PerfilViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            using (var db = new FitStyleDBEntities())
+            {
+                var email = User.Identity.Name;
+                var usuario = db.Usuarios.SingleOrDefault(u => u.email == email);
+                if (usuario == null) return HttpNotFound();
+
+                
+                usuario.nombre_completo = model.NombreCompleto;
+
+               
+                var dir = usuario.Direcciones_Usuario
+                                 .FirstOrDefault(d => d.es_principal);
+
+                if (dir == null)
+                {
+                    dir = new Direcciones_Usuario
+                    {
+                        id_usuario = usuario.id_usuario,
+                        es_principal = true
+                    };
+                    db.Direcciones_Usuario.Add(dir);
+                }
+
+                // Seteamos los datos de la dirección
+                dir.linea1 = model.DireccionLinea1;
+                dir.linea2 = model.DireccionLinea2;
+                dir.ciudad = model.Ciudad;
+                dir.departamento = model.Departamento;
+                dir.pais = model.Pais;
+                dir.codigo_postal = model.CodigoPostal;
+                dir.telefono_contacto = model.Telefono;      
+
+                db.SaveChanges();
+            }
+
+            TempData["PerfilActualizado"] = "Tus datos se han guardado correctamente.";
+            return RedirectToAction("Perfil");
+        }
+
+
     }
 }

@@ -1,12 +1,22 @@
-
 @{
-  ViewBag.Title="Pago exitoso";
-  Layout="~/Views/Shared/_Layout.cshtml";
-  var total = TempData["Total"];
-  var nombre = TempData["Nombre"];
+    ViewBag.Title = "Pago exitoso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var total = TempData["Total"];
+    var nombre = TempData["Nombre"];
+    var idFactura = TempData["IdFactura"] as int?;
 }
+
 <div class="alert alert-success">
-  <h4 class="alert-heading">¡Pago realizado con éxito!</h4>
-  <p>Gracias @nombre por tu compra. Total pagado: <strong>$@total</strong>.</p>
+    <h4 class="alert-heading">¡Pago realizado con éxito!</h4>
+    <p>Gracias @nombre por tu compra. Total pagado: <strong>$@total</strong>.</p>
 </div>
+
+@if (idFactura.HasValue)
+{
+    <a class="btn btn-outline-secondary me-2"
+       href="@Url.Action("FacturaPdf", "Checkout", new { id = idFactura.Value })">
+        Descargar factura (PDF)
+    </a>
+}
+
 <a class="btn btn-dark" href="@Url.Action("Index","Productos")">Volver al catálogo</a>
