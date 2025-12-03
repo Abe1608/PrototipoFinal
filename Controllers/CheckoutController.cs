@@ -37,9 +37,7 @@ namespace PrototipoFinal.Controllers
             return null;
         }
 
-        // =========================
-        //   SELECCIONAR MÉTODO
-        // =========================
+        //Metodo para seleccionar metodo de pago
         [HttpGet]
         public ActionResult MetodoPago()
         {
@@ -60,6 +58,7 @@ namespace PrototipoFinal.Controllers
             return View();
         }
 
+        //Metodo para procesar el metodo de pago seleccionado
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult MetodoPago(string metodo)
@@ -70,14 +69,13 @@ namespace PrototipoFinal.Controllers
                 return View();
             }
 
-            // Guardamos método para la siguiente pantalla
+            /* Exactamente no es necesario guardar en TempData, pero lo hacemos para mantener el flujo claro
+              entre pantallas. */
             TempData["MetodoPago"] = metodo;
             return RedirectToAction("Pagar", new { metodo = metodo });
         }
 
-        // =========================
-        //   PANTALLA DE PAGO
-        // =========================
+        /*Metodo encargado en procesar  la forma de pago por el usuario*/
         [HttpGet]
         public ActionResult Pagar(string metodo)
         {
@@ -85,7 +83,6 @@ namespace PrototipoFinal.Controllers
             if (idUsuario == null)
                 return RedirectToAction("Login", "Account");
 
-            // Recuperar método si viene de TempData
             if (string.IsNullOrEmpty(metodo))
                 metodo = TempData["MetodoPago"] as string;
 
@@ -101,7 +98,7 @@ namespace PrototipoFinal.Controllers
                 return RedirectToAction("Index", "Productos");
             }
 
-            // Calcular total desde BD
+            // Genera el total del carrito desde la base de datos
             var total = (from d in db.Carrito_Detalle
                          join inv in db.Inventario_Detalle on d.id_inventario equals inv.id_inventario
                          join p in db.Productos on inv.id_producto equals p.id_producto
@@ -115,9 +112,7 @@ namespace PrototipoFinal.Controllers
             return View();
         }
 
-        // =========================
-        //   CONFIRMAR PAGO
-        // =========================
+        // En este metodo se procesa el pago y se generan un registro de pedido y factura
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Pagar(
@@ -141,18 +136,14 @@ namespace PrototipoFinal.Controllers
                 return RedirectToAction("Index", "Productos");
             }
 
-            // Recalcular total REAL desde BD (no confiar en el hidden)
+            // Recalcula el valor real del carrito
             var totalReal = (from d in db.Carrito_Detalle
                              join inv in db.Inventario_Detalle on d.id_inventario equals inv.id_inventario
                              join p in db.Productos on inv.id_producto equals p.id_producto
                              where d.id_carrito == carrito.id_carrito
                              select (decimal?)d.cantidad * p.precio)
                             .Sum() ?? 0m;
-
-            // Aquí iría la integración real con pasarela (Stripe/PayPal).
-            // De momento asumimos que el pago fue "aceptado".
-
-            // 1) Crear registro en Pedidos
+            
             var pedido = new Pedidos
             {
                 id_usuario = idUsuario,
@@ -161,9 +152,8 @@ namespace PrototipoFinal.Controllers
                 fecha_creacion = DateTime.Now
             };
             db.Pedidos.Add(pedido);
-            db.SaveChanges(); // para tener id_pedido
+            db.SaveChanges();
 
-            // 2) Crear detalles de pedido a partir del carrito
             var detallesCarrito = db.Carrito_Detalle
                                     .Where(d => d.id_carrito == carrito.id_carrito)
                                     .ToList();
@@ -182,14 +172,13 @@ namespace PrototipoFinal.Controllers
                     precio_unitario = precioUnitario
                 });
 
-                // Opcional: actualizar stock
+                
                 if (inv != null)
                 {
                     inv.stock_actual -= det.cantidad;
                 }
             }
 
-            // 3) Crear factura
             string numeroFactura = "FS-" + DateTime.Now.ToString("yyyyMMddHHmmss");
 
             var factura = new Facturas
@@ -204,13 +193,11 @@ namespace PrototipoFinal.Controllers
             };
             db.Facturas.Add(factura);
 
-            // 4) Cerrar carrito
             carrito.estado = "Cerrado";
             carrito.ultima_actualizacion = DateTime.Now;
 
             db.SaveChanges();
 
-            // 5) Pasar datos a la pantalla de éxito
             TempData["Total"] = totalReal;
             TempData["Nombre"] = nombre;
             TempData["IdFactura"] = factura.id_factura;
@@ -223,8 +210,8 @@ namespace PrototipoFinal.Controllers
             return View();
         }
 
-        // Aquí luego agregamos FacturaPdf(int id) para el PDF.
 
+        // Metodo para generar el PDF de la factura
         public FileResult FacturaPdf(int id)
         {
             var factura = db.Facturas
@@ -240,14 +227,12 @@ namespace PrototipoFinal.Controllers
 
             using (var ms = new MemoryStream())
             {
-                // Documento tamaño carta con márgenes
+                
                 var doc = new Document(PageSize.LETTER, 40f, 40f, 50f, 60f);
                 var writer = PdfWriter.GetInstance(doc, ms);
                 doc.Open();
 
-                // ================================
-                //  FUENTES PERSONALIZADAS
-                // ================================
+                // Definición de fuentes y colores
                 BaseFont bfRegular = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
                 BaseFont bfBold = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, false);
 
@@ -259,16 +244,11 @@ namespace PrototipoFinal.Controllers
                 var fontTotal = new Font(bfBold, 12, Font.BOLD, new BaseColor(0, 0, 0));
                 var fontFooter = new Font(bfRegular, 8, Font.NORMAL, new BaseColor(130, 130, 130));
 
-                // ================================
-                //  COLORES
-                // ================================
                 BaseColor colorPrimario = new BaseColor(255, 140, 0);
                 BaseColor colorGrisClaro = new BaseColor(245, 245, 245);
                 BaseColor colorTablaHead = new BaseColor(33, 33, 33);
 
-                // ================================
-                //  HEADER CON LOGO + TITULO
-                // ================================
+                // Header
                 PdfPTable headerTable = new PdfPTable(2);
                 headerTable.WidthPercentage = 100;
                 headerTable.SetWidths(new float[] { 30, 70 });
@@ -313,9 +293,8 @@ namespace PrototipoFinal.Controllers
                 doc.Add(new Chunk(line));
                 doc.Add(new Paragraph(" "));
 
-                // ================================
-                //  DATOS GENERALES
-                // ================================
+                //Datos generales de la factura
+
                 var usuario = factura.Usuarios;
 
                 PdfPTable infoTable = new PdfPTable(2);
@@ -342,9 +321,7 @@ namespace PrototipoFinal.Controllers
                 doc.Add(infoTable);
                 doc.Add(new Paragraph(" "));
 
-                // ================================
-                //  TABLA DE DETALLE
-                // ================================
+                // detalles de la factura
                 PdfPTable tabla = new PdfPTable(4);
                 tabla.WidthPercentage = 100;
                 tabla.SetWidths(new float[] { 40, 20, 20, 20 });
@@ -370,20 +347,17 @@ namespace PrototipoFinal.Controllers
 
                 doc.Add(tabla);
 
-                // ================================
-                //  TOTAL  (ARREGLADO)
-                // ================================
+                // Total
                 doc.Add(new Paragraph(" "));
                 PdfPTable totalTable = new PdfPTable(2);
                 totalTable.WidthPercentage = 40;
                 totalTable.HorizontalAlignment = Element.ALIGN_RIGHT;
                 totalTable.SetWidths(new float[] { 50, 50 });
 
-                // Creamos las celdas por separado
+                // Fila de total
                 PdfPCell totalLabelCell = CellSinBorde(new Phrase("Total:", fontLabel));
                 PdfPCell totalValueCell = CellSinBorde(new Phrase("$" + factura.monto_total.ToString("0.00"), fontTotal));
 
-                // Alineamos la celda del valor a la derecha
                 totalValueCell.HorizontalAlignment = Element.ALIGN_RIGHT;
 
                 totalTable.AddCell(totalLabelCell);
@@ -391,9 +365,7 @@ namespace PrototipoFinal.Controllers
 
                 doc.Add(totalTable);
 
-                // ================================
-                //  NOTA AL PIE
-                // ================================
+                //Nota de pie de pagina
                 doc.Add(new Paragraph(" "));
                 doc.Add(new Chunk(line));
 
@@ -411,7 +383,7 @@ namespace PrototipoFinal.Controllers
             }
         }
 
-        // Helpers para celdas
+        // Metodos para crear celdas de la tabla PDF
         private PdfPCell CellSinBorde(Phrase phrase)
         {
             return new PdfPCell(phrase)
