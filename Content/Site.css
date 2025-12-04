@@ -310,3 +310,12 @@ body {
         opacity: 0.2;
     }
 
+.profile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f58c00; 
+}
+
+

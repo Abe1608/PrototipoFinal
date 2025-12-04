@@ -13,6 +13,7 @@ namespace PrototipoFinal.ViewModels
         [Display(Name = "Nombre completo")]
         public string NombreCompleto { get; set; }
 
+        [Required]
         [StringLength(20)]
         [Display(Name = "Teléfono")]
         public string Telefono { get; set; }
@@ -26,6 +27,7 @@ namespace PrototipoFinal.ViewModels
         [Required]
         public string Ciudad { get; set; }
 
+        [Required]
         public string Departamento { get; set; }
 
         [Required]
@@ -33,5 +35,11 @@ namespace PrototipoFinal.ViewModels
 
         [Display(Name = "Código postal")]
         public string CodigoPostal { get; set; }
+
+        
+        public string FotoPerfilUrl { get; set; }
+
+        
+        public HttpPostedFileBase FotoArchivo { get; set; }
     }
 }

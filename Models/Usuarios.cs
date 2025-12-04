@@ -11,9 +11,7 @@ namespace PrototipoFinal.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class Usuarios
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -27,17 +25,12 @@ namespace PrototipoFinal.Models
     
         public int id_usuario { get; set; }
         public string nombre_usuario { get; set; }
-        [DataType(DataType.EmailAddress)]
         public string email { get; set; }
-        [DataType(DataType.Password)]
-        [StringLength(15, MinimumLength = 6)]
-        [PasswordPropertyText(true)]
         public string password_hash { get; set; }
-
-        [StringLength(80, ErrorMessage = "No debe sobrepasar de los 80 caracteres")]
         public string nombre_completo { get; set; }
         public bool es_admin { get; set; }
         public System.DateTime fecha_registro { get; set; }
+        public string foto_perfil { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Carritos> Carritos { get; set; }

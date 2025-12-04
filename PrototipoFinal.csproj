@@ -220,6 +220,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="images\logo\Logo.png" />
+    <Content Include="images\profile_default.png" />
     <Content Include="Models\FitStyleDB.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>FitStyleDB.edmx</DependentUpon>
@@ -279,9 +280,11 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Perfil.cshtml" />
     <Content Include="Views\Checkout\MetodoPago.cshtml" />
+    <Content Include="Views\Account\MiPerfil.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="images\uploads\perfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

@@ -4,6 +4,7 @@ using PrototipoFinal.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -150,20 +151,54 @@ namespace Prototipado.Controllers
                 {
                     NombreCompleto = usuario.nombre_completo,
 
-                    // Teléfono viene de la dirección principal
-                    Telefono = dir?.telefono_contacto,          // o dir?.telefono_contacto
+                    Telefono = dir?.telefono_contacto,          
 
                     DireccionLinea1 = dir?.linea1,
                     DireccionLinea2 = dir?.linea2,
                     Ciudad = dir?.ciudad,
                     Departamento = dir?.departamento,
                     Pais = dir?.pais,
-                    CodigoPostal = dir?.codigo_postal
+                    CodigoPostal = dir?.codigo_postal,
+                    FotoPerfilUrl = usuario.foto_perfil
                 };
 
                 return View(model);
             }
         }
+
+        [Authorize]
+        public ActionResult MiPerfil()
+        {
+            using (var db = new FitStyleDBEntities())
+            {
+                var email = User.Identity.Name;
+                var usuario = db.Usuarios.SingleOrDefault(u => u.email == email);
+                if (usuario == null) return HttpNotFound();
+
+                // Dirección principal (puede ser null la primera vez)
+                var dir = usuario.Direcciones_Usuario
+                                 .FirstOrDefault(d => d.es_principal);
+
+                var model = new PerfilViewModel
+                {
+                    NombreCompleto = usuario.nombre_completo,
+                    Telefono = dir?.telefono_contacto,
+                    DireccionLinea1 = dir?.linea1,
+                    DireccionLinea2 = dir?.linea2,
+                    Ciudad = dir?.ciudad,
+                    Departamento = dir?.departamento,
+                    Pais = dir?.pais,
+                    CodigoPostal = dir?.codigo_postal,
+                    
+                    FotoPerfilUrl = usuario.foto_perfil
+                };
+
+                return View(model);
+            }
+        }
+
+
+
 
         [HttpPost]
         [Authorize]
@@ -203,13 +238,38 @@ namespace Prototipado.Controllers
                 dir.departamento = model.Departamento;
                 dir.pais = model.Pais;
                 dir.codigo_postal = model.CodigoPostal;
-                dir.telefono_contacto = model.Telefono;      
+                dir.telefono_contacto = model.Telefono;
+
+                if (model.FotoArchivo != null && model.FotoArchivo.ContentLength > 0)
+                {
+                    var ext = Path.GetExtension(model.FotoArchivo.FileName).ToLower();
+                    var permitidas = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+
+                    if (!permitidas.Contains(ext))
+                    {
+                        ModelState.AddModelError("FotoArchivo", "Solo se permiten imágenes JPG, PNG o GIF.");
+                        return View(model);
+                    }
+
+                    
+                    var uploadDir = Server.MapPath("~/images/uploads/perfiles");
+                    if (!Directory.Exists(uploadDir))
+                        Directory.CreateDirectory(uploadDir);
+
+                    var fileName = $"user_{usuario.id_usuario}_{DateTime.Now:yyyyMMddHHmmss}{ext}";
+                    var filePath = Path.Combine(uploadDir, fileName);
+
+                    
+                    model.FotoArchivo.SaveAs(filePath);
+
+                    
+                    usuario.foto_perfil = "/images/uploads/perfiles/" + fileName;
+                }
 
                 db.SaveChanges();
+                TempData["PerfilActualizado"] = "Tus datos se han guardado correctamente.";
+                return RedirectToAction("MiPerfil", "Account");
             }
-
-            TempData["PerfilActualizado"] = "Tus datos se han guardado correctamente.";
-            return RedirectToAction("Perfil");
         }
 
 

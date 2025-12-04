@@ -1,0 +1,132 @@
+﻿@model PrototipoFinal.ViewModels.PerfilViewModel
+@{
+    ViewBag.Title = "Mi perfil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-4 profile-container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm profile-card">
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center mb-4">
+                        @{
+                            var mensajePerfil = TempData["PerfilActualizado"] as string;
+                            var foto = string.IsNullOrEmpty(Model.FotoPerfilUrl)
+                                                ? Url.Content("~/images/profile_default.png")
+                                                : Url.Content(Model.FotoPerfilUrl);
+                        }
+                        <img src="@foto"
+                             alt="Foto de perfil"
+                             class="profile-avatar me-3" />
+                        <div>
+                            <h5 class="mb-1">@Model.NombreCompleto</h5>
+                            <div class="text-muted small">
+                                @User.Identity.Name
+                            </div>
+                        </div>
+                        <div class="ms-auto">
+                            <a href="@Url.Action("Perfil", "Account")"
+                               class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-pencil-square me-1"></i> Editar perfil
+                            </a>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <h6 class="text-uppercase small text-muted mb-1">Teléfono</h6>
+                            <div>@(string.IsNullOrWhiteSpace(Model.Telefono) ? "-" : Model.Telefono)</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h6 class="text-uppercase small text-muted mb-1">País</h6>
+                            <div>@(string.IsNullOrWhiteSpace(Model.Pais) ? "-" : Model.Pais)</div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <h6 class="text-uppercase small text-muted mb-1">Dirección</h6>
+                            <div>
+                                @if (!string.IsNullOrWhiteSpace(Model.DireccionLinea1))
+                                {
+                                    @Model.DireccionLinea1<br />
+                                }
+                                @if (!string.IsNullOrWhiteSpace(Model.DireccionLinea2))
+                                {
+                                    @Model.DireccionLinea2<br />
+                                }
+                                @if (!string.IsNullOrWhiteSpace(Model.Ciudad) || !string.IsNullOrWhiteSpace(Model.Departamento))
+                                {
+                                    @Model.Ciudad @(" ") @Model.Departamento<br />
+                                }
+                                @if (!string.IsNullOrWhiteSpace(Model.CodigoPostal))
+                                {
+                                    @("CP ")@Model.CodigoPostal
+                                }
+                                @if (string.IsNullOrWhiteSpace(Model.DireccionLinea1)
+                                    && string.IsNullOrWhiteSpace(Model.Ciudad)
+                                    && string.IsNullOrWhiteSpace(Model.Pais))
+                                {
+                                    @:<span class="text-muted">Aún no has registrado una dirección.</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(mensajePerfil))
+            {
+
+                <div class="modal fade" id="perfilModal" tabindex="-1" aria-labelledby="perfilModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title" id="perfilModalLabel">Éxito</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                @mensajePerfil
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button"
+                                        class="btn btn-success"
+                                        id="btnAceptarModal"
+                                        data-bs-dismiss="modal">
+                                    Aceptar
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var modalElement = document.getElementById('perfilModal');
+            if (!modalElement) return;
+
+            var modal = new bootstrap.Modal(modalElement);
+            modal.show();
+
+
+            document.getElementById("btnAceptarModal").addEventListener("click", function () {
+
+                window.location.href = '@Url.Action("MiPerfil", "Account")';
+            });
+        });
+                </script>
+            }
+
+
+        </div>
+    </div>
+</div>
+
+

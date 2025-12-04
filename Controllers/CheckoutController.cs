@@ -51,7 +51,7 @@ namespace PrototipoFinal.Controllers
 
             if (carrito == null || !carrito.Carrito_Detalle.Any())
             {
-                TempData["Error"] = "Tu carrito está vacío.";
+                TempData["CarritoVacioMensaje"] = "Debes agregar productos al carrito para realizar un pago.";
                 return RedirectToAction("Index", "Productos");
             }
 

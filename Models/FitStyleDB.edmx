@@ -132,6 +132,7 @@
           <Property Name="nombre_completo" Type="nvarchar" MaxLength="150" />
           <Property Name="es_admin" Type="bit" Nullable="false" />
           <Property Name="fecha_registro" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="foto_perfil" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <Association Name="FK_CarritoDet_Carritos">
           <End Role="Carritos" Type="Self.Carritos" Multiplicity="1" />
@@ -496,6 +497,7 @@
           <NavigationProperty Name="Facturas" Relationship="Self.FK_Facturas_Usuarios" FromRole="Usuarios" ToRole="Facturas" />
           <NavigationProperty Name="Pedidos" Relationship="Self.FK_Pedidos_Usuarios" FromRole="Usuarios" ToRole="Pedidos" />
           <NavigationProperty Name="Direcciones_Usuario" Relationship="FitStyleDBModel.FK_Direcciones_Usuario_Usuarios" FromRole="Usuarios" ToRole="Direcciones_Usuario" />
+          <Property Name="foto_perfil" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_CarritoDet_Carritos">
           <End Role="Carritos" Type="Self.Carritos" Multiplicity="1" />
@@ -855,6 +857,7 @@
           <EntitySetMapping Name="Usuarios">
             <EntityTypeMapping TypeName="FitStyleDBModel.Usuarios">
               <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="foto_perfil" ColumnName="foto_perfil" />
                 <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
                 <ScalarProperty Name="nombre_usuario" ColumnName="nombre_usuario" />
                 <ScalarProperty Name="email" ColumnName="email" />
